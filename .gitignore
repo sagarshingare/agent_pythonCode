@@ -84,3 +84,31 @@ pip-log.txt
 # other
 *.bak
 *~
+
+# Large data files
+*.csv
+*.tsv
+*.parquet
+*.avro
+*.h5
+*.hdf5
+*.db
+*.sqlite
+*.sqlite3
+
+# Git LFS track info (if used)
+*.psd
+*.ai
+*.zip
+*.tar.gz
+*.tar
+*.tgz
+*.7z
+
+# Machine learning model files
+*.pt
+*.pth
+*.ckpt
+*.model
+*.joblib
+*.
