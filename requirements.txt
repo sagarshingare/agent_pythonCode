@@ -1,0 +1,15 @@
+pandas>=1.5.0
+numpy>=1.24.0
+scipy>=1.10.0
+statsmodels>=0.14.0
+pyspark>=3.5.0
+polars>=0.19.0
+apache-airflow>=2.8.0
+prefect>=2.12.0
+langchain>=0.0.306
+llama-index>=0.8.8
+transformers>=4.30.0
+openai>=0.30.0
+ray>=2.6.0
+faiss-cpu>=1.7.4
+chromadb>=0.3.26
