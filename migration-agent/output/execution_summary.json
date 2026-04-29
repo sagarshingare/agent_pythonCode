@@ -1,0 +1,251 @@
+{
+  "start_time": "2026-04-30T02:26:49.246474",
+  "end_time": "2026-04-30T02:26:49.394137",
+  "agents": {
+    "planner": {
+      "agent_name": "PlannerAgent",
+      "status": "COMPLETED",
+      "output": {
+        "execution_plan": [
+          {
+            "step": 1,
+            "agent": "SpecAgent",
+            "description": "Parse Informatica XML export -> JSON -> Canonical Model",
+            "inputs": [
+              "xml_data"
+            ],
+            "outputs": [
+              "canonical_models",
+              "json_data"
+            ],
+            "timeout": 120,
+            "optional": false,
+            "retry": 3
+          },
+          {
+            "step": 2,
+            "agent": "CodeGenAgent",
+            "description": "Generate PySpark code from canonical model",
+            "inputs": [
+              "canonical_models"
+            ],
+            "outputs": [
+              "generated_code"
+            ],
+            "timeout": 180,
+            "optional": false,
+            "retry": 2
+          },
+          {
+            "step": 3,
+            "agent": "ValidationAgent",
+            "description": "Generate SQL validation queries (row counts, hashes, EXCEPT)",
+            "inputs": [
+              "canonical_models"
+            ],
+            "outputs": [
+              "validation_queries"
+            ],
+            "timeout": 120,
+            "optional": false,
+            "retry": 2
+          },
+          {
+            "step": 4,
+            "agent": "OptimizationAgent",
+            "description": "Apply performance optimizations (repartition, cache, broadcast)",
+            "inputs": [
+              "generated_code",
+              "canonical_models"
+            ],
+            "outputs": [
+              "optimized_code"
+            ],
+            "timeout": 120,
+            "optional": true,
+            "retry": 1
+          },
+          {
+            "step": 5,
+            "agent": "OrchestrationAgent",
+            "description": "Generate Airflow DAG for job orchestration",
+            "inputs": [
+              "canonical_models",
+              "generated_code"
+            ],
+            "outputs": [
+              "airflow_dag"
+            ],
+            "timeout": 120,
+            "optional": true,
+            "retry": 1
+          },
+          {
+            "step": 6,
+            "agent": "DocumentationAgent",
+            "description": "Generate comprehensive documentation from XML and code",
+            "inputs": [
+              "canonical_models",
+              "generated_code"
+            ],
+            "outputs": [
+              "documentation"
+            ],
+            "timeout": 120,
+            "optional": true,
+            "retry": 1
+          },
+          {
+            "step": 7,
+            "agent": "DataGenerationAgent",
+            "description": "Generate sample input and output datasets",
+            "inputs": [
+              "canonical_models"
+            ],
+            "outputs": [
+              "input_dataset",
+              "output_dataset"
+            ],
+            "timeout": 120,
+            "optional": true,
+            "retry": 1
+          }
+        ],
+        "total_steps": 7,
+        "agents_to_execute": [
+          "SpecAgent",
+          "CodeGenAgent",
+          "ValidationAgent",
+          "OptimizationAgent",
+          "OrchestrationAgent",
+          "DocumentationAgent",
+          "DataGenerationAgent"
+        ]
+      },
+      "error": null,
+      "execution_time_ms": 0
+    },
+    "spec": {
+      "agent_name": "SpecAgent",
+      "status": "COMPLETED",
+      "output": {
+        "xml_data_summary": {
+          "sources": 2,
+          "targets": 4,
+          "mappings": 3
+        },
+        "canonical_model_summary": {
+          "total_mappings": 3,
+          "mappings": [
+            "m_COMPTIME_Build_Message_Counters",
+            "m_COMPTIME_Load_COMP_TIME_DAILY_TBL",
+            "m_COMPTIME_Current_Pay_Period"
+          ],
+          "total_sources": 2,
+          "total_targets": 4,
+          "sources": [
+            "U0287D01",
+            "PAY_PERIOD"
+          ],
+          "targets": [
+            "COUNTER_TBL",
+            "COMPTIME_MESSAGE_FILE",
+            "COMP_TIME_DAILY_TBL",
+            "COMP_TIME_DATE_FILE"
+          ]
+        },
+        "mappings": [
+          "m_COMPTIME_Build_Message_Counters",
+          "m_COMPTIME_Load_COMP_TIME_DAILY_TBL",
+          "m_COMPTIME_Current_Pay_Period"
+        ],
+        "json_file": "output/informatica_export.json"
+      },
+      "error": null,
+      "execution_time_ms": 7
+    },
+    "codegen": {
+      "agent_name": "CodeGenAgent",
+      "status": "COMPLETED",
+      "output": {
+        "generated_files": [
+          "output/m_comptime_build_message_counters.py",
+          "output/m_comptime_load_comp_time_daily_tbl.py",
+          "output/m_comptime_current_pay_period.py",
+          "output/main_job.py"
+        ],
+        "main_job_file": "output/main_job.py",
+        "individual_mapping_files": [
+          "output/m_comptime_build_message_counters.py",
+          "output/m_comptime_load_comp_time_daily_tbl.py",
+          "output/m_comptime_current_pay_period.py"
+        ],
+        "total_lines": 293
+      },
+      "error": null,
+      "execution_time_ms": 2
+    },
+    "validation": {
+      "agent_name": "ValidationAgent",
+      "status": "COMPLETED",
+      "output": {
+        "validation_file": "output/validation.sql",
+        "total_queries": 3,
+        "query_types": [
+          "row_count",
+          "except",
+          "hash"
+        ]
+      },
+      "error": null,
+      "execution_time_ms": 0
+    },
+    "optimization": {
+      "agent_name": "OptimizationAgent",
+      "status": "COMPLETED",
+      "output": {
+        "optimized_file": "output/job_optimized.py",
+        "optimizations_applied": [
+          "repartitioning",
+          "broadcast_joins",
+          "caching",
+          "adaptive_query_execution"
+        ]
+      },
+      "error": null,
+      "execution_time_ms": 0
+    },
+    "orchestration": {
+      "agent_name": "OrchestrationAgent",
+      "status": "COMPLETED",
+      "output": {
+        "dag_file": "output/informatica_migration_dag.py",
+        "mappings_count": 3,
+        "dag_id": "informatica_migration_dag"
+      },
+      "error": null,
+      "execution_time_ms": 0
+    },
+    "documentation": {
+      "agent_name": "DocumentationAgent",
+      "status": "COMPLETED",
+      "output": {
+        "documentation_files": [
+          "output/m_comptime_build_message_counters_doc.md",
+          "output/m_comptime_load_comp_time_daily_tbl_doc.md",
+          "output/m_comptime_current_pay_period_doc.md",
+          "output/README.md"
+        ],
+        "index_file": "output/README.md",
+        "total_mappings_documented": 3
+      },
+      "error": null,
+      "execution_time_ms": 0
+    }
+  },
+  "outputs": {
+    "canonical_models": 3,
+    "generated_code_lines": 39,
+    "validation_queries": 75
+  }
+}

@@ -1,0 +1,368 @@
+You are a senior AI architect, data engineer, and Python expert.
+
+Your task is to build a production-grade Agentic AI system that migrates Informatica ETL mappings (XML) into PySpark code with validation, optimization, orchestration, documentation, and knowledge learning capabilities.
+
+This is NOT a demo. Build a fully working, extensible, enterprise-grade system.
+
+---
+
+# 🎯 OBJECTIVE
+
+Create an end-to-end system that:
+
+1. Parses Informatica XML export file: sample_informatic_export.xml
+2. Converts XML → JSON → Canonical Model
+3. Uses multi-agent architecture (planner + execution agents)
+4. Generates PySpark code
+5. Generates input/output sample datasets aligned with XML logic
+6. Generates validation SQL queries
+7. Applies performance optimizations
+8. Creates Airflow DAG
+9. Builds documentation automatically from XML
+10. Uses memory + knowledge graph for reuse and learning
+11. Supports maplets (reusable transformations)
+12. Runs end-to-end via main.py
+
+---
+
+# 📂 PROJECT STRUCTURE (STRICT)
+
+migration-agent/
+│
+├── config/
+│   ├── settings.yaml
+│   ├── mappings.yaml
+│   └── agent_config.yaml
+│
+├── data/
+│   ├── sample_informatic_export.xml
+│   ├── generated_input.csv
+│   └── generated_output.csv
+│
+├── ingestion/
+│   └── xml_parser.py
+│
+├── canonical/
+│   ├── model_builder.py
+│   └── xml_to_json.py
+│
+├── agents/
+│   ├── base_agent.py
+│   ├── planner_agent.py
+│   ├── spec_agent.py
+│   ├── codegen_agent.py
+│   ├── validation_agent.py
+│   ├── optimization_agent.py
+│   ├── orchestration_agent.py
+│   └── documentation_agent.py
+│
+├── rag/
+│   ├── knowledge_base.py
+│   ├── retriever.py
+│   └── memory_store.py
+│
+├── knowledge_graph/
+│   └── graph_builder.py
+│
+├── transformers/
+│   ├── expression.py
+│   ├── join.py
+│   ├── aggregator.py
+│   └── maplet_handler.py
+│
+├── output/
+│   ├── pyspark/
+│   ├── sql/
+│   ├── dags/
+│   └── docs/
+│
+├── utils/
+│   ├── logger.py
+│   └── helpers.py
+│
+├── main.py
+├── requirements.txt
+└── README.md
+
+---
+
+# ⚙️ CORE IMPLEMENTATION REQUIREMENTS
+
+---
+
+## 1. XML INPUT HANDLING
+
+- Use file: sample_informatic_export.xml
+- Parse:
+  - Mapping
+  - Source / Target
+  - Transformations
+  - Maplets
+  - Expressions
+
+---
+
+## 2. XML → JSON CONVERSION
+
+- Convert XML → structured JSON
+- Preserve hierarchy:
+  - mapping
+  - transformation
+  - connectors
+  - maplets
+
+---
+
+## 3. CANONICAL MODEL
+
+- Normalize JSON into canonical format:
+  - mapping_name
+  - sources
+  - targets
+  - steps[]
+  - dependencies
+  - maplet references
+
+- Must be deterministic (NO LLM)
+
+---
+
+## 4. MULTI-AGENT ARCHITECTURE
+
+---
+
+### 🔷 PlannerAgent (NEW - CRITICAL)
+
+- Orchestrates entire flow
+- Decides:
+  - which agents to call
+  - execution order
+- Generates execution plan like:
+
+step1: parse XML  
+step2: build canonical  
+step3: generate code  
+step4: validate  
+step5: optimize  
+
+---
+
+### 🔷 SpecAgent
+- XML → JSON → Canonical
+
+---
+
+### 🔷 CodeGenAgent
+- Convert canonical → PySpark
+- Support:
+  - Filter
+  - Expression
+  - Aggregation
+  - Join
+  - Maplet expansion
+
+---
+
+### 🔷 ValidationAgent
+- Generate:
+  - row count checks
+  - EXCEPT queries
+  - hash comparisons
+
+---
+
+### 🔷 OptimizationAgent
+- Add:
+  - repartition
+  - cache
+  - broadcast joins
+
+---
+
+### 🔷 OrchestrationAgent
+- Generate Airflow DAG dynamically
+
+---
+
+### 🔷 DocumentationAgent (NEW)
+
+Generate documentation from XML:
+
+- Mapping overview
+- Source → Target lineage
+- Transformation logic explanation
+- Column-level mapping
+- Save as Markdown in output/docs/
+
+---
+
+## 5. MAPLET SUPPORT (IMPORTANT)
+
+- Detect maplets in XML
+- Expand them into reusable transformation blocks
+- Allow reuse across mappings
+
+---
+
+## 6. INPUT & OUTPUT DATA GENERATION
+
+- Generate sample input dataset based on:
+  - source schema
+- Generate expected output dataset:
+  - based on transformation logic
+
+Save:
+- data/generated_input.csv
+- data/generated_output.csv
+
+---
+
+## 7. RAG + MEMORY SYSTEM
+
+---
+
+### Knowledge Base
+- Store transformation rules:
+  - IIF → when
+  - NVL → coalesce
+  - DECODE → case when
+
+---
+
+### Memory Store
+- Store:
+  - previous mappings
+  - corrections
+  - generated code
+
+---
+
+## 8. KNOWLEDGE GRAPH (ADVANCED)
+
+- Build graph:
+  - Nodes = transformations
+  - Edges = data flow
+- Use NetworkX
+- Persist graph for reuse
+
+---
+
+## 9. TRANSFORMERS MODULE
+
+- expression.py → column logic
+- join.py → join handling
+- aggregator.py → groupBy logic
+- maplet_handler.py → maplet expansion
+
+---
+
+## 10. MAIN PIPELINE
+
+main.py must:
+
+1. Load XML
+2. Run PlannerAgent
+3. Execute agents in sequence
+4. Generate:
+   - PySpark code
+   - SQL validation
+   - DAG
+   - Documentation
+   - Sample datasets
+5. Save all outputs
+
+---
+
+## 11. OUTPUT REQUIREMENTS
+
+Generate:
+
+- output/pyspark/job.py
+- output/sql/validation.sql
+- output/dags/dag.py
+- output/docs/mapping_doc.md
+- data/generated_input.csv
+- data/generated_output.csv
+
+---
+
+## 12. LOGGING
+
+- Use Python logging
+- Log each agent execution step
+
+---
+
+## 13. ERROR HANDLING
+
+Handle:
+- Invalid XML
+- Missing transformations
+- Unsupported logic
+- Maplet errors
+
+---
+
+## 14. README.md (MANDATORY)
+
+Include:
+- Architecture diagram
+- Agent flow
+- Setup steps
+- Execution steps
+- Sample outputs
+- Future enhancements
+
+---
+
+## 15. REQUIREMENTS
+
+Include:
+- pyspark
+- lxml
+- pyyaml
+- apache-airflow
+- networkx
+- pandas
+
+---
+
+# 🚀 EXECUTION REQUIREMENT
+
+System MUST:
+
+- Run via: python main.py
+- Produce all outputs
+- Print results in console
+
+---
+
+# 🧠 CODING STANDARDS
+
+- Production-grade Python
+- Type hints
+- Modular design
+- No placeholders
+- No pseudo code
+
+---
+
+# 🔥 BONUS (IF POSSIBLE)
+
+- CLI interface
+- Unit tests
+- Config-driven rules
+- Extendable for LLM integration
+
+---
+
+# ⚠️ STRICT RULES
+
+- Do NOT skip modules
+- Do NOT simplify logic
+- Do NOT leave TODO
+- Everything must run
+
+---
+
+Now generate the FULL working project with all files and code

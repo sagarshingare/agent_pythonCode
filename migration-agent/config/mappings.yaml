@@ -1,0 +1,111 @@
+# Informatica to PySpark Transformation Mapping Rules
+
+# Expression Function Mappings
+expression_functions:
+  IIF: "when"  # IIF(condition, true_val, false_val) -> when(condition, true_val).otherwise(false_val)
+  NVL: "coalesce"  # NVL(col, default) -> coalesce(col, default)
+  DECODE: "case_when"  # DECODE(expr, val1, result1, ...) -> case when expr = val1 then result1
+  TO_CHAR: "cast"  # TO_CHAR(col) -> cast(col, StringType())
+  TO_DATE: "to_date"  # TO_DATE(col, format) -> to_date(col, format)
+  TO_TIMESTAMP: "to_timestamp"  # TO_TIMESTAMP(col) -> to_timestamp(col)
+  LPAD: "lpad"  # LPAD(col, len, char) -> lpad(col, len, char)
+  RPAD: "rpad"  # RPAD(col, len, char) -> rpad(col, len, char)
+  SUBSTR: "substring"  # SUBSTR(col, pos, len) -> substring(col, pos, len)
+  LENGTH: "length"  # LENGTH(col) -> length(col)
+  UPPER: "upper"  # UPPER(col) -> upper(col)
+  LOWER: "lower"  # LOWER(col) -> lower(col)
+  TRIM: "trim"  # TRIM(col) -> trim(col)
+  ROUND: "round"  # ROUND(col, decimals) -> round(col, decimals)
+  TRUNC: "floor"  # TRUNC(col) -> floor(col)
+  ABS: "abs"  # ABS(col) -> abs(col)
+  SIGN: "signum"  # SIGN(col) -> signum(col)
+  GREATEST: "greatest"  # GREATEST(col1, col2, ...) -> greatest(col1, col2, ...)
+  LEAST: "least"  # LEAST(col1, col2, ...) -> least(col1, col2, ...)
+  COUNT: "count"  # COUNT(col) -> count(col)
+  SUM: "sum"  # SUM(col) -> sum(col)
+  AVG: "avg"  # AVG(col) -> avg(col)
+  MIN: "min"  # MIN(col) -> min(col)
+  MAX: "max"  # MAX(col) -> max(col)
+  STDDEV: "stddev"  # STDDEV(col) -> stddev(col)
+  VARIANCE: "variance"  # VARIANCE(col) -> variance(col)
+  CONCAT: "concat"  # CONCAT(col1, col2, ...) -> concat(col1, col2, ...)
+  IS_NUMBER: "regexp"  # IS_NUMBER(col) -> regexp_like(col, pattern)
+  IS_NULL: "isnull"  # IS_NULL(col) -> isnull(col)
+  IS_NOT_NULL: "isnotnull"  # IS_NOT_NULL(col) -> isnotnull(col)
+  SETVARIABLE: "store_in_memory"  # SETVARIABLE($$var, value) -> Store in memory
+  SESSSTARTTIME: "current_timestamp"  # SESSSTARTTIME -> current_timestamp()
+
+# Data Type Mappings
+data_types:
+  string: "StringType"
+  varchar2: "StringType"
+  varchar: "StringType"
+  char: "StringType"
+  number: "DecimalType"
+  number_p_s: "DecimalType"  # number(p,s)
+  decimal: "DecimalType"
+  integer: "IntegerType"
+  int: "IntegerType"
+  smallint: "ShortType"
+  bigint: "LongType"
+  float: "DoubleType"
+  double: "DoubleType"
+  date: "DateType"
+  datetime: "TimestampType"
+  date_time: "TimestampType"
+  timestamp: "TimestampType"
+  boolean: "BooleanType"
+  binary: "BinaryType"
+
+# Transformation Type Mappings
+transformation_types:
+  Source Qualifier: "source_qualifier"
+  Expression: "expression"
+  Filter: "filter"
+  Aggregator: "aggregator"
+  Lookup Procedure: "lookup"
+  Join: "join"
+  Router: "router"
+  Sequence Generator: "sequence_generator"
+  Stored Procedure: "stored_procedure"
+  Target Definition: "target"
+  Union: "union"
+  Transaction Control: "transaction_control"
+
+# Operator Mappings
+operators:
+  "=": "=="
+  "<>": "!="
+  "<": "<"
+  ">": ">"
+  "<=": "<="
+  ">=": ">="
+  "AND": "and"
+  "OR": "or"
+  "NOT": "not"
+  "IN": "isin"
+  "LIKE": "like"
+  "IS NULL": "isNull"
+  "IS NOT NULL": "isNotNull"
+
+# Join Type Mappings
+join_types:
+  inner: "inner"
+  left: "left"
+  right: "right"
+  outer: "outer"
+  left_outer: "left"
+  right_outer: "right"
+  full_outer: "outer"
+
+# Aggregation Function Mappings
+aggregation_functions:
+  COUNT: "count"
+  SUM: "sum"
+  AVG: "avg"
+  MIN: "min"
+  MAX: "max"
+  STDDEV: "stddev"
+  VARIANCE: "variance"
+  FIRST: "first"
+  LAST: "last"

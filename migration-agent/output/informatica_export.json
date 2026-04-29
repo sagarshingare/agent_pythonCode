@@ -1,0 +1,4515 @@
+{
+  "repository": {
+    "name": "Test_Repo_Srvc",
+    "version": "187",
+    "codepage": "Latin1",
+    "databasetype": "Oracle"
+  },
+  "mappings": {
+    "m_COMPTIME_Build_Message_Counters": {
+      "name": "m_COMPTIME_Build_Message_Counters",
+      "description": "This mapping gets the count of detail records on the CompTime file that was processed and loads it to the Counters Table. ",
+      "isvalid": "YES",
+      "transformations": {
+        "exp_Build_Message": {
+          "name": "exp_Build_Message",
+          "type": "Expression",
+          "description": "This transformation sets the mapping variables MAP_SUBJECT and MAP_MESSAGE using the counters and descriptions set in the previous expression transformation.",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "COUNTER_DESCRIPTION_1",
+              "datatype": "string",
+              "porttype": "INPUT",
+              "precision": "200",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COUNTER_1",
+              "datatype": "integer",
+              "porttype": "INPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_NUM",
+              "datatype": "decimal",
+              "porttype": "INPUT",
+              "precision": "2",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_END_YEAR",
+              "datatype": "decimal",
+              "porttype": "INPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "v_PP_NUM",
+              "datatype": "string",
+              "porttype": "LOCAL VARIABLE",
+              "precision": "2",
+              "scale": "0",
+              "expression": "IIF(PP_NUM < 10,\r\n       LPAD(TO_CHAR(PP_NUM), 2, '0'),\r\n    TO_CHAR(PP_NUM)\r\n)",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "v_ENVIRONMENT",
+              "datatype": "string",
+              "porttype": "LOCAL VARIABLE",
+              "precision": "6",
+              "scale": "0",
+              "expression": "DECODE(SUBSTR($PMRepositoryServiceName, 1, 4),\r\n                       'Dev_', 'Dev: ',\r\n                       'Test',   'Test: ',\r\n                       'Prod',  'Prod: ')\r\n",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "v_SUBJECT",
+              "datatype": "string",
+              "porttype": "LOCAL VARIABLE",
+              "precision": "100",
+              "scale": "0",
+              "expression": "v_ENVIRONMENT ||\r\n'Comp Time File loaded successfully for Pay Period:  ' || \r\nTO_CHAR(PP_END_YEAR) || '-' || v_PP_NUM",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "o_SUBJECT",
+              "datatype": "string",
+              "porttype": "OUTPUT",
+              "precision": "100",
+              "scale": "0",
+              "expression": "SETVARIABLE($$MAP_SUBJECT, v_SUBJECT)",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            },
+            {
+              "name": "v_MESSAGE",
+              "datatype": "string",
+              "porttype": "LOCAL VARIABLE",
+              "precision": "300",
+              "scale": "0",
+              "expression": "'Number of Detail Records from Comp Time file\t= ' || TO_CHAR(COUNTER_1)",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "o_MESSAGE",
+              "datatype": "string",
+              "porttype": "OUTPUT",
+              "precision": "300",
+              "scale": "0",
+              "expression": "SETVARIABLE($$MAP_MESSAGE, v_MESSAGE)",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Tracing Level": "Normal"
+          },
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "v_PP_NUM",
+              "expression": "IIF(PP_NUM < 10,\r\n       LPAD(TO_CHAR(PP_NUM), 2, '0'),\r\n    TO_CHAR(PP_NUM)\r\n)",
+              "type": "GENERAL"
+            },
+            {
+              "field": "v_ENVIRONMENT",
+              "expression": "DECODE(SUBSTR($PMRepositoryServiceName, 1, 4),\r\n                       'Dev_', 'Dev: ',\r\n                       'Test',   'Test: ',\r\n                       'Prod',  'Prod: ')\r\n",
+              "type": "GENERAL"
+            },
+            {
+              "field": "v_SUBJECT",
+              "expression": "v_ENVIRONMENT ||\r\n'Comp Time File loaded successfully for Pay Period:  ' || \r\nTO_CHAR(PP_END_YEAR) || '-' || v_PP_NUM",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_SUBJECT",
+              "expression": "SETVARIABLE($$MAP_SUBJECT, v_SUBJECT)",
+              "type": "GENERAL"
+            },
+            {
+              "field": "v_MESSAGE",
+              "expression": "'Number of Detail Records from Comp Time file\t= ' || TO_CHAR(COUNTER_1)",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_MESSAGE",
+              "expression": "SETVARIABLE($$MAP_MESSAGE, v_MESSAGE)",
+              "type": "GENERAL"
+            }
+          ],
+          "filter_condition": null
+        },
+        "fil_Detail": {
+          "name": "fil_Detail",
+          "type": "Filter",
+          "description": "Filters Detail Records",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "SSN",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "9",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "RECORD_TYPE_FLAG",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "RECORD_TYPE",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "DETAIL_CONSTANT",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "1",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Filter Condition": "RECORD_TYPE_FLAG = 'D'\r\n\r\n--RECORD_TYPE_FLAG = 'H' OR",
+            "Tracing Level": "Normal"
+          },
+          "sql_query": null,
+          "expression_logic": [],
+          "filter_condition": "RECORD_TYPE_FLAG = 'D'\r\n\r\n--RECORD_TYPE_FLAG = 'H' OR"
+        },
+        "exp_Initial": {
+          "name": "exp_Initial",
+          "type": "Expression",
+          "description": "Determines Detail records to be used for further processing.",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "SSN",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "9",
+              "scale": "0",
+              "expression": "SSN",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "NAME",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "30",
+              "scale": "0",
+              "expression": "NAME",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "o_RECORD_TYPE_FLAG",
+              "datatype": "string",
+              "porttype": "OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "DECODE(TRUE,\r\n\t\t\t   IS_NUMBER(SSN), 'D',\r\n\t\t\t  'NO')",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Tracing Level": "Normal"
+          },
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "SSN",
+              "expression": "SSN",
+              "type": "GENERAL"
+            },
+            {
+              "field": "NAME",
+              "expression": "NAME",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_RECORD_TYPE_FLAG",
+              "expression": "DECODE(TRUE,\r\n\t\t\t   IS_NUMBER(SSN), 'D',\r\n\t\t\t  'NO')",
+              "type": "GENERAL"
+            }
+          ],
+          "filter_condition": null
+        },
+        "agg_ALL_RECORDS": {
+          "name": "agg_ALL_RECORDS",
+          "type": "Aggregator",
+          "description": "Performs a count on all Detail Records.",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "SSN",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "9",
+              "scale": "0",
+              "expression": "SSN",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "RECORD_TYPE_FLAG",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "RECORD_TYPE_FLAG",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "RECORD_TYPE",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "RECORD_TYPE",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "o_DETAIL_RECORD_COUNT",
+              "datatype": "integer",
+              "porttype": "OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "COUNT(SSN)",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Cache Directory": "$PMCacheDir",
+            "Tracing Level": "Normal",
+            "Sorted Input": "NO",
+            "Aggregator Data Cache Size": "Auto",
+            "Aggregator Index Cache Size": "Auto",
+            "Transformation Scope": "All Input"
+          },
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "SSN",
+              "expression": "SSN",
+              "type": "GENERAL"
+            },
+            {
+              "field": "RECORD_TYPE_FLAG",
+              "expression": "RECORD_TYPE_FLAG",
+              "type": "GENERAL"
+            },
+            {
+              "field": "RECORD_TYPE",
+              "expression": "RECORD_TYPE",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_DETAIL_RECORD_COUNT",
+              "expression": "COUNT(SSN)",
+              "type": "GENERAL"
+            }
+          ],
+          "filter_condition": null
+        },
+        "exp_Detail_Count": {
+          "name": "exp_Detail_Count",
+          "type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "DETAIL_RECORD_COUNT",
+              "datatype": "integer",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "DETAIL_RECORD_COUNT",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "o_CURR_PP_FLAG",
+              "datatype": "string",
+              "porttype": "OUTPUT",
+              "precision": "1",
+              "scale": "0",
+              "expression": "'Y'",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Tracing Level": "Normal"
+          },
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "DETAIL_RECORD_COUNT",
+              "expression": "DETAIL_RECORD_COUNT",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_CURR_PP_FLAG",
+              "expression": "'Y'",
+              "type": "GENERAL"
+            }
+          ],
+          "filter_condition": null
+        },
+        "exp_Counters": {
+          "name": "exp_Counters",
+          "type": "Expression",
+          "description": "Compiles all the counter values.",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "o_COUNTER_DESCRIPTION_1",
+              "datatype": "string",
+              "porttype": "OUTPUT",
+              "precision": "200",
+              "scale": "0",
+              "expression": "'Number of detail records from the COMP TIME file.'",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            },
+            {
+              "name": "DETAIL_RECORD_COUNT",
+              "datatype": "integer",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "DETAIL_RECORD_COUNT",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "lkp_PP_NUM",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "2",
+              "scale": "0",
+              "expression": "lkp_PP_NUM",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "lkp_PP_END_YEAR",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "lkp_PP_END_YEAR",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Tracing Level": "Normal"
+          },
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "o_COUNTER_DESCRIPTION_1",
+              "expression": "'Number of detail records from the COMP TIME file.'",
+              "type": "GENERAL"
+            },
+            {
+              "field": "DETAIL_RECORD_COUNT",
+              "expression": "DETAIL_RECORD_COUNT",
+              "type": "GENERAL"
+            },
+            {
+              "field": "lkp_PP_NUM",
+              "expression": "lkp_PP_NUM",
+              "type": "GENERAL"
+            },
+            {
+              "field": "lkp_PP_END_YEAR",
+              "expression": "lkp_PP_END_YEAR",
+              "type": "GENERAL"
+            }
+          ],
+          "filter_condition": null
+        },
+        "exp_Final": {
+          "name": "exp_Final",
+          "type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "o_RUN_DATE",
+              "datatype": "date/time",
+              "porttype": "OUTPUT",
+              "precision": "29",
+              "scale": "9",
+              "expression": "SESSSTARTTIME",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            },
+            {
+              "name": "o_PROCESS_NAME",
+              "datatype": "string",
+              "porttype": "OUTPUT",
+              "precision": "100",
+              "scale": "0",
+              "expression": "$PMMappingName",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            },
+            {
+              "name": "COUNTER_DESCRIPTION",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "200",
+              "scale": "0",
+              "expression": "COUNTER_DESCRIPTION",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COUNTER_VALUE",
+              "datatype": "double",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "15",
+              "scale": "0",
+              "expression": "COUNTER_VALUE",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Tracing Level": "Normal"
+          },
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "o_RUN_DATE",
+              "expression": "SESSSTARTTIME",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_PROCESS_NAME",
+              "expression": "$PMMappingName",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COUNTER_DESCRIPTION",
+              "expression": "COUNTER_DESCRIPTION",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COUNTER_VALUE",
+              "expression": "COUNTER_VALUE",
+              "type": "GENERAL"
+            }
+          ],
+          "filter_condition": null
+        },
+        "SQ_U0287D01": {
+          "name": "SQ_U0287D01",
+          "type": "Source Qualifier",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "SSN",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "9",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "NAME",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "30",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURRENT_ACCT",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURRENT_ORG",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "7",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "FLSA_STATUS",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "1",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_CUR_BAL",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "2",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_YEAR_EARNED",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_END_DATE",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "DAILY_DATE_EARNED",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_RATE",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "2",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_HOURS",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "2",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_UNDEF",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Sql Query": "",
+            "User Defined Join": "",
+            "Source Filter": "",
+            "Number Of Sorted Ports": "0",
+            "Tracing Level": "Normal",
+            "Select Distinct": "NO",
+            "Is Partitionable": "NO",
+            "Pre SQL": "",
+            "Post SQL": "",
+            "Output is deterministic": "NO",
+            "Output is repeatable": "Never"
+          },
+          "sql_query": "",
+          "expression_logic": [],
+          "filter_condition": null
+        },
+        "lkp_PAY_PERIOD": {
+          "name": "lkp_PAY_PERIOD",
+          "type": "Lookup Procedure",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "in_CURR_PP_FLAG",
+              "datatype": "string",
+              "porttype": "INPUT",
+              "precision": "1",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_NUM",
+              "datatype": "decimal",
+              "porttype": "LOOKUP/OUTPUT",
+              "precision": "2",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_END_YEAR",
+              "datatype": "decimal",
+              "porttype": "LOOKUP/OUTPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_START_DTE",
+              "datatype": "date/time",
+              "porttype": "LOOKUP",
+              "precision": "29",
+              "scale": "9",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_END_DTE",
+              "datatype": "date/time",
+              "porttype": "LOOKUP",
+              "precision": "29",
+              "scale": "9",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "LV_NUM",
+              "datatype": "decimal",
+              "porttype": "LOOKUP",
+              "precision": "2",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "LV_YEAR",
+              "datatype": "decimal",
+              "porttype": "LOOKUP",
+              "precision": "4",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PAY_DTE",
+              "datatype": "date/time",
+              "porttype": "LOOKUP",
+              "precision": "29",
+              "scale": "9",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURR_PP_FLAG",
+              "datatype": "string",
+              "porttype": "LOOKUP",
+              "precision": "1",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Lookup Sql Override": "",
+            "Lookup table name": "PAY_PERIOD",
+            "Lookup Source Filter": "",
+            "Lookup caching enabled": "YES",
+            "Lookup policy on multiple match": "Use Any Value",
+            "Lookup condition": "CURR_PP_FLAG = in_CURR_PP_FLAG",
+            "Connection Information": "$Target",
+            "Source Type": "Database",
+            "Recache if Stale": "NO",
+            "Tracing Level": "Normal",
+            "Lookup cache directory name": "$PMCacheDir",
+            "Lookup cache initialize": "NO",
+            "Lookup cache persistent": "NO",
+            "Lookup Data Cache Size": "Auto",
+            "Lookup Index Cache Size": "Auto",
+            "Dynamic Lookup Cache": "NO",
+            "Synchronize Dynamic Cache": "NO",
+            "Output Old Value On Update": "NO",
+            "Update Dynamic Cache Condition": "TRUE",
+            "Cache File Name Prefix": "",
+            "Re-cache from lookup source": "NO",
+            "Insert Else Update": "NO",
+            "Update Else Insert": "NO",
+            "Datetime Format": "",
+            "Thousand Separator": "None",
+            "Decimal Separator": ".",
+            "Case Sensitive String Comparison": "NO",
+            "Null ordering": "Null Is Highest Value",
+            "Sorted Input": "NO",
+            "Lookup source is static": "NO",
+            "Pre-build lookup cache": "Auto",
+            "Subsecond Precision": "6"
+          },
+          "sql_query": null,
+          "expression_logic": [],
+          "filter_condition": null
+        },
+        "exp_Final_Message": {
+          "name": "exp_Final_Message",
+          "type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "SUBJECT",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "100",
+              "scale": "0",
+              "expression": "SUBJECT",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "MESSAGE",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "600",
+              "scale": "0",
+              "expression": "MESSAGE",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Tracing Level": "Normal"
+          },
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "SUBJECT",
+              "expression": "SUBJECT",
+              "type": "GENERAL"
+            },
+            {
+              "field": "MESSAGE",
+              "expression": "MESSAGE",
+              "type": "GENERAL"
+            }
+          ],
+          "filter_condition": null
+        }
+      },
+      "instances": [
+        {
+          "name": "COUNTER_TBL",
+          "type": "TARGET",
+          "transformation_name": "COUNTER_TBL",
+          "transformation_type": "Target Definition",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "COMPTIME_MESSAGE_FILE",
+          "type": "TARGET",
+          "transformation_name": "COMPTIME_MESSAGE_FILE",
+          "transformation_type": "Target Definition",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "exp_Build_Message",
+          "type": "TRANSFORMATION",
+          "transformation_name": "exp_Build_Message",
+          "transformation_type": "Expression",
+          "description": "This transformation sets the mapping variables MAP_SUBJECT and MAP_MESSAGE using the counters and descriptions set in the previous expression transformation.",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "fil_Detail",
+          "type": "TRANSFORMATION",
+          "transformation_name": "fil_Detail",
+          "transformation_type": "Filter",
+          "description": "Filters Detail Records",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "exp_Initial",
+          "type": "TRANSFORMATION",
+          "transformation_name": "exp_Initial",
+          "transformation_type": "Expression",
+          "description": "Determines Detail records to be used for further processing.",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "agg_ALL_RECORDS",
+          "type": "TRANSFORMATION",
+          "transformation_name": "agg_ALL_RECORDS",
+          "transformation_type": "Aggregator",
+          "description": "Performs a count on all Detail Records.",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "exp_Detail_Count",
+          "type": "TRANSFORMATION",
+          "transformation_name": "exp_Detail_Count",
+          "transformation_type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "exp_Counters",
+          "type": "TRANSFORMATION",
+          "transformation_name": "exp_Counters",
+          "transformation_type": "Expression",
+          "description": "Compiles all the counter values.",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "exp_Final",
+          "type": "TRANSFORMATION",
+          "transformation_name": "exp_Final",
+          "transformation_type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "U0287D01",
+          "type": "SOURCE",
+          "transformation_name": "U0287D01",
+          "transformation_type": "Source Definition",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "FlatFile",
+          "associated_sources": []
+        },
+        {
+          "name": "SQ_U0287D01",
+          "type": "TRANSFORMATION",
+          "transformation_name": "SQ_U0287D01",
+          "transformation_type": "Source Qualifier",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": [
+            "U0287D01"
+          ]
+        },
+        {
+          "name": "lkp_PAY_PERIOD",
+          "type": "TRANSFORMATION",
+          "transformation_name": "lkp_PAY_PERIOD",
+          "transformation_type": "Lookup Procedure",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "exp_Final_Message",
+          "type": "TRANSFORMATION",
+          "transformation_name": "exp_Final_Message",
+          "transformation_type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        }
+      ],
+      "connectors": [
+        {
+          "fromfield": "o_RUN_DATE",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "RUN_DATE",
+          "toinstance": "COUNTER_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "COUNTER_DESCRIPTION",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "COUNTER_DESCRIPTION",
+          "toinstance": "COUNTER_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "COUNTER_VALUE",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "COUNTER_VALUE",
+          "toinstance": "COUNTER_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "o_PROCESS_NAME",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "PROCESS_NAME",
+          "toinstance": "COUNTER_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "SUBJECT",
+          "frominstance": "exp_Final_Message",
+          "frominstancetype": "Expression",
+          "tofield": "SUBJECT",
+          "toinstance": "COMPTIME_MESSAGE_FILE",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "MESSAGE",
+          "frominstance": "exp_Final_Message",
+          "frominstancetype": "Expression",
+          "tofield": "MESSAGE",
+          "toinstance": "COMPTIME_MESSAGE_FILE",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "o_MESSAGE",
+          "frominstance": "exp_Build_Message",
+          "frominstancetype": "Expression",
+          "tofield": "MESSAGE",
+          "toinstance": "exp_Final_Message",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "o_SUBJECT",
+          "frominstance": "exp_Build_Message",
+          "frominstancetype": "Expression",
+          "tofield": "SUBJECT",
+          "toinstance": "exp_Final_Message",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "o_COUNTER_DESCRIPTION_1",
+          "frominstance": "exp_Counters",
+          "frominstancetype": "Expression",
+          "tofield": "COUNTER_DESCRIPTION_1",
+          "toinstance": "exp_Build_Message",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "DETAIL_RECORD_COUNT",
+          "frominstance": "exp_Counters",
+          "frominstancetype": "Expression",
+          "tofield": "COUNTER_1",
+          "toinstance": "exp_Build_Message",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "lkp_PP_NUM",
+          "frominstance": "exp_Counters",
+          "frominstancetype": "Expression",
+          "tofield": "PP_NUM",
+          "toinstance": "exp_Build_Message",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "lkp_PP_END_YEAR",
+          "frominstance": "exp_Counters",
+          "frominstancetype": "Expression",
+          "tofield": "PP_END_YEAR",
+          "toinstance": "exp_Build_Message",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "SSN",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "SSN",
+          "toinstance": "fil_Detail",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "o_RECORD_TYPE_FLAG",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "RECORD_TYPE_FLAG",
+          "toinstance": "fil_Detail",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "SSN",
+          "frominstance": "fil_Detail",
+          "frominstancetype": "Filter",
+          "tofield": "SSN",
+          "toinstance": "agg_ALL_RECORDS",
+          "toinstancetype": "Aggregator"
+        },
+        {
+          "fromfield": "RECORD_TYPE_FLAG",
+          "frominstance": "fil_Detail",
+          "frominstancetype": "Filter",
+          "tofield": "RECORD_TYPE_FLAG",
+          "toinstance": "agg_ALL_RECORDS",
+          "toinstancetype": "Aggregator"
+        },
+        {
+          "fromfield": "RECORD_TYPE",
+          "frominstance": "fil_Detail",
+          "frominstancetype": "Filter",
+          "tofield": "RECORD_TYPE",
+          "toinstance": "agg_ALL_RECORDS",
+          "toinstancetype": "Aggregator"
+        },
+        {
+          "fromfield": "SSN",
+          "frominstance": "SQ_U0287D01",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "SSN",
+          "toinstance": "exp_Initial",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "NAME",
+          "frominstance": "SQ_U0287D01",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "NAME",
+          "toinstance": "exp_Initial",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "o_DETAIL_RECORD_COUNT",
+          "frominstance": "agg_ALL_RECORDS",
+          "frominstancetype": "Aggregator",
+          "tofield": "DETAIL_RECORD_COUNT",
+          "toinstance": "exp_Detail_Count",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "DETAIL_RECORD_COUNT",
+          "frominstance": "exp_Detail_Count",
+          "frominstancetype": "Expression",
+          "tofield": "DETAIL_RECORD_COUNT",
+          "toinstance": "exp_Counters",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "o_CURR_PP_FLAG",
+          "frominstance": "exp_Detail_Count",
+          "frominstancetype": "Expression",
+          "tofield": "in_CURR_PP_FLAG",
+          "toinstance": "lkp_PAY_PERIOD",
+          "toinstancetype": "Lookup Procedure"
+        },
+        {
+          "fromfield": "PP_NUM",
+          "frominstance": "lkp_PAY_PERIOD",
+          "frominstancetype": "Lookup Procedure",
+          "tofield": "lkp_PP_NUM",
+          "toinstance": "exp_Counters",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "PP_END_YEAR",
+          "frominstance": "lkp_PAY_PERIOD",
+          "frominstancetype": "Lookup Procedure",
+          "tofield": "lkp_PP_END_YEAR",
+          "toinstance": "exp_Counters",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "o_COUNTER_DESCRIPTION_1",
+          "frominstance": "exp_Counters",
+          "frominstancetype": "Expression",
+          "tofield": "COUNTER_DESCRIPTION",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "DETAIL_RECORD_COUNT",
+          "frominstance": "exp_Counters",
+          "frominstancetype": "Expression",
+          "tofield": "COUNTER_VALUE",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "SSN",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "SSN",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "NAME",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "NAME",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "CURRENT_ACCT",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "CURRENT_ACCT",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "CURRENT_ORG",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "CURRENT_ORG",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "FLSA_STATUS",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "FLSA_STATUS",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "COMP_TIME_CUR_BAL",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "COMP_TIME_CUR_BAL",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "COMP_TIME_YEAR_EARNED",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "COMP_TIME_YEAR_EARNED",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "PP_END_DATE",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "PP_END_DATE",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "DAILY_DATE_EARNED",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "DAILY_DATE_EARNED",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "COMP_TIME_RATE",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "COMP_TIME_RATE",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "COMP_TIME_HOURS",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "COMP_TIME_HOURS",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "COMP_TIME_UNDEF",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "COMP_TIME_UNDEF",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        }
+      ],
+      "targetloadorder": [
+        {
+          "order": "1",
+          "targetinstance": "COUNTER_TBL"
+        },
+        {
+          "order": "1",
+          "targetinstance": "COMPTIME_MESSAGE_FILE"
+        }
+      ],
+      "variables": {
+        "$$MAP_MESSAGE": {
+          "name": "$$MAP_MESSAGE",
+          "datatype": "string",
+          "defaultvalue": "0",
+          "description": "",
+          "userdefined": "YES"
+        },
+        "$$MAP_SUBJECT": {
+          "name": "$$MAP_SUBJECT",
+          "datatype": "string",
+          "defaultvalue": "0",
+          "description": "",
+          "userdefined": "YES"
+        }
+      }
+    },
+    "m_COMPTIME_Load_COMP_TIME_DAILY_TBL": {
+      "name": "m_COMPTIME_Load_COMP_TIME_DAILY_TBL",
+      "description": "",
+      "isvalid": "YES",
+      "transformations": {
+        "SQ_U0287D01": {
+          "name": "SQ_U0287D01",
+          "type": "Source Qualifier",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "SSN",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "9",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "NAME",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "30",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURRENT_ACCT",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURRENT_ORG",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "7",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "FLSA_STATUS",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "1",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_CUR_BAL",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "2",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_YEAR_EARNED",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_END_DATE",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "DAILY_DATE_EARNED",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_RATE",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "2",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_HOURS",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "2",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_UNDEF",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Sql Query": "",
+            "User Defined Join": "",
+            "Source Filter": "",
+            "Number Of Sorted Ports": "0",
+            "Tracing Level": "Normal",
+            "Is Partitionable": "NO",
+            "Pre SQL": "",
+            "Post SQL": "",
+            "Output is deterministic": "NO",
+            "Output is repeatable": "Never"
+          },
+          "sql_query": "",
+          "expression_logic": [],
+          "filter_condition": null
+        },
+        "exp_Initial": {
+          "name": "exp_Initial",
+          "type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "SSN",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "9",
+              "scale": "0",
+              "expression": "SSN",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "NAME",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "30",
+              "scale": "0",
+              "expression": "NAME",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURRENT_ACCT",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "CURRENT_ACCT",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURRENT_ORG",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "7",
+              "scale": "0",
+              "expression": "CURRENT_ORG",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "FLSA_STATUS",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "1",
+              "scale": "0",
+              "expression": "FLSA_STATUS",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_CUR_BAL",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "2",
+              "expression": "COMP_TIME_CUR_BAL",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_YEAR_EARNED",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "COMP_TIME_YEAR_EARNED",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_END_DATE",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "0",
+              "expression": "PP_END_DATE",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "DAILY_DATE_EARNED",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "0",
+              "expression": "DAILY_DATE_EARNED",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_RATE",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "2",
+              "expression": "COMP_TIME_RATE",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_HOURS",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "2",
+              "expression": "COMP_TIME_HOURS",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_UNDEF",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "COMP_TIME_UNDEF",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "o_CURR_PP_FLAG",
+              "datatype": "string",
+              "porttype": "OUTPUT",
+              "precision": "1",
+              "scale": "0",
+              "expression": "'Y'",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            },
+            {
+              "name": "o_VALID_RECORD_FLAG",
+              "datatype": "integer",
+              "porttype": "OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "DECODE (TRUE, IS_NUMBER(SSN), 1,\r\n                                    0)\r\n                       ",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Tracing Level": "Normal"
+          },
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "SSN",
+              "expression": "SSN",
+              "type": "GENERAL"
+            },
+            {
+              "field": "NAME",
+              "expression": "NAME",
+              "type": "GENERAL"
+            },
+            {
+              "field": "CURRENT_ACCT",
+              "expression": "CURRENT_ACCT",
+              "type": "GENERAL"
+            },
+            {
+              "field": "CURRENT_ORG",
+              "expression": "CURRENT_ORG",
+              "type": "GENERAL"
+            },
+            {
+              "field": "FLSA_STATUS",
+              "expression": "FLSA_STATUS",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COMP_TIME_CUR_BAL",
+              "expression": "COMP_TIME_CUR_BAL",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COMP_TIME_YEAR_EARNED",
+              "expression": "COMP_TIME_YEAR_EARNED",
+              "type": "GENERAL"
+            },
+            {
+              "field": "PP_END_DATE",
+              "expression": "PP_END_DATE",
+              "type": "GENERAL"
+            },
+            {
+              "field": "DAILY_DATE_EARNED",
+              "expression": "DAILY_DATE_EARNED",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COMP_TIME_RATE",
+              "expression": "COMP_TIME_RATE",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COMP_TIME_HOURS",
+              "expression": "COMP_TIME_HOURS",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COMP_TIME_UNDEF",
+              "expression": "COMP_TIME_UNDEF",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_CURR_PP_FLAG",
+              "expression": "'Y'",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_VALID_RECORD_FLAG",
+              "expression": "DECODE (TRUE, IS_NUMBER(SSN), 1,\r\n                                    0)\r\n                       ",
+              "type": "GENERAL"
+            }
+          ],
+          "filter_condition": null
+        },
+        "exp_Final": {
+          "name": "exp_Final",
+          "type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "PP_END_YEAR",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "PP_END_YEAR",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_NUM",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "2",
+              "scale": "0",
+              "expression": "PP_NUM",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_YEAR_NUM",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "PP_YEAR_NUM",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "SSN",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "9",
+              "scale": "0",
+              "expression": "SSN",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "NAME",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "30",
+              "scale": "0",
+              "expression": "NAME",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURRENT_ACCT",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "CURRENT_ACCT",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURRENT_ORG",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "7",
+              "scale": "0",
+              "expression": "CURRENT_ORG",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "FLSA_STATUS",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "1",
+              "scale": "0",
+              "expression": "FLSA_STATUS",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_CUR_BAL",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "2",
+              "expression": "COMP_TIME_CUR_BAL",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_YEAR_EARNED",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "COMP_TIME_YEAR_EARNED",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_END_DATE",
+              "datatype": "date/time",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "29",
+              "scale": "9",
+              "expression": "PP_END_DATE",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "DAILY_DATE_EARNED",
+              "datatype": "date/time",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "29",
+              "scale": "9",
+              "expression": "DAILY_DATE_EARNED",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_RATE",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "2",
+              "expression": "COMP_TIME_RATE",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_HOURS",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "2",
+              "expression": "COMP_TIME_HOURS",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_UNDEF",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "COMP_TIME_UNDEF",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Tracing Level": "Normal"
+          },
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "PP_END_YEAR",
+              "expression": "PP_END_YEAR",
+              "type": "GENERAL"
+            },
+            {
+              "field": "PP_NUM",
+              "expression": "PP_NUM",
+              "type": "GENERAL"
+            },
+            {
+              "field": "PP_YEAR_NUM",
+              "expression": "PP_YEAR_NUM",
+              "type": "GENERAL"
+            },
+            {
+              "field": "SSN",
+              "expression": "SSN",
+              "type": "GENERAL"
+            },
+            {
+              "field": "NAME",
+              "expression": "NAME",
+              "type": "GENERAL"
+            },
+            {
+              "field": "CURRENT_ACCT",
+              "expression": "CURRENT_ACCT",
+              "type": "GENERAL"
+            },
+            {
+              "field": "CURRENT_ORG",
+              "expression": "CURRENT_ORG",
+              "type": "GENERAL"
+            },
+            {
+              "field": "FLSA_STATUS",
+              "expression": "FLSA_STATUS",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COMP_TIME_CUR_BAL",
+              "expression": "COMP_TIME_CUR_BAL",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COMP_TIME_YEAR_EARNED",
+              "expression": "COMP_TIME_YEAR_EARNED",
+              "type": "GENERAL"
+            },
+            {
+              "field": "PP_END_DATE",
+              "expression": "PP_END_DATE",
+              "type": "GENERAL"
+            },
+            {
+              "field": "DAILY_DATE_EARNED",
+              "expression": "DAILY_DATE_EARNED",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COMP_TIME_RATE",
+              "expression": "COMP_TIME_RATE",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COMP_TIME_HOURS",
+              "expression": "COMP_TIME_HOURS",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COMP_TIME_UNDEF",
+              "expression": "COMP_TIME_UNDEF",
+              "type": "GENERAL"
+            }
+          ],
+          "filter_condition": null
+        },
+        "lkp_PAY_PERIOD": {
+          "name": "lkp_PAY_PERIOD",
+          "type": "Lookup Procedure",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "in_CURR_PP_FLAG",
+              "datatype": "string",
+              "porttype": "INPUT",
+              "precision": "1",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_NUM",
+              "datatype": "decimal",
+              "porttype": "LOOKUP/OUTPUT",
+              "precision": "2",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_END_YEAR",
+              "datatype": "decimal",
+              "porttype": "LOOKUP/OUTPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_START_DTE",
+              "datatype": "date/time",
+              "porttype": "LOOKUP",
+              "precision": "29",
+              "scale": "9",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_END_DTE",
+              "datatype": "date/time",
+              "porttype": "LOOKUP",
+              "precision": "29",
+              "scale": "9",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "LV_NUM",
+              "datatype": "decimal",
+              "porttype": "LOOKUP",
+              "precision": "2",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "LV_YEAR",
+              "datatype": "decimal",
+              "porttype": "LOOKUP",
+              "precision": "4",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PAY_DTE",
+              "datatype": "date/time",
+              "porttype": "LOOKUP",
+              "precision": "29",
+              "scale": "9",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURR_PP_FLAG",
+              "datatype": "string",
+              "porttype": "LOOKUP",
+              "precision": "1",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Lookup Sql Override": "",
+            "Lookup table name": "PAY_PERIOD",
+            "Lookup Source Filter": "",
+            "Lookup caching enabled": "YES",
+            "Lookup policy on multiple match": "Use Any Value",
+            "Lookup condition": "CURR_PP_FLAG = in_CURR_PP_FLAG",
+            "Connection Information": "$Target",
+            "Source Type": "Database",
+            "Recache if Stale": "NO",
+            "Tracing Level": "Normal",
+            "Lookup cache directory name": "$PMCacheDir",
+            "Lookup cache initialize": "NO",
+            "Lookup cache persistent": "NO",
+            "Lookup Data Cache Size": "Auto",
+            "Lookup Index Cache Size": "Auto",
+            "Dynamic Lookup Cache": "NO",
+            "Synchronize Dynamic Cache": "NO",
+            "Output Old Value On Update": "NO",
+            "Update Dynamic Cache Condition": "TRUE",
+            "Cache File Name Prefix": "",
+            "Re-cache from lookup source": "NO",
+            "Insert Else Update": "NO",
+            "Update Else Insert": "NO",
+            "Datetime Format": "",
+            "Thousand Separator": "None",
+            "Decimal Separator": ".",
+            "Case Sensitive String Comparison": "NO",
+            "Null ordering": "Null Is Highest Value",
+            "Sorted Input": "NO",
+            "Lookup source is static": "NO",
+            "Pre-build lookup cache": "Auto",
+            "Subsecond Precision": "6"
+          },
+          "sql_query": null,
+          "expression_logic": [],
+          "filter_condition": null
+        },
+        "exp_Convert": {
+          "name": "exp_Convert",
+          "type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "SSN",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "9",
+              "scale": "0",
+              "expression": "SSN",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "NAME",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "30",
+              "scale": "0",
+              "expression": "NAME",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURRENT_ACCT",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "CURRENT_ACCT",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURRENT_ORG",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "7",
+              "scale": "0",
+              "expression": "CURRENT_ORG",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "FLSA_STATUS",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "1",
+              "scale": "0",
+              "expression": "FLSA_STATUS",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_CUR_BAL",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "2",
+              "expression": "COMP_TIME_CUR_BAL",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_YEAR_EARNED",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "COMP_TIME_YEAR_EARNED",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_END_DATE",
+              "datatype": "string",
+              "porttype": "INPUT",
+              "precision": "8",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "o_PP_END_DATE",
+              "datatype": "date/time",
+              "porttype": "OUTPUT",
+              "precision": "29",
+              "scale": "9",
+              "expression": "IIF(IS_DATE(PP_END_DATE, 'YYYYMMDD'),\r\n                                   TO_DATE(PP_END_DATE, 'YYYYMMDD')\r\n       )",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            },
+            {
+              "name": "DAILY_DATE_EARNED",
+              "datatype": "string",
+              "porttype": "INPUT",
+              "precision": "8",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "o_DAILY_DATE_EARNED",
+              "datatype": "date/time",
+              "porttype": "OUTPUT",
+              "precision": "29",
+              "scale": "9",
+              "expression": "IIF(IS_DATE(DAILY_DATE_EARNED, 'YYYYMMDD'),\r\n                                   TO_DATE(DAILY_DATE_EARNED, 'YYYYMMDD')\r\n       )",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_RATE",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "2",
+              "expression": "COMP_TIME_RATE",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_HOURS",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "2",
+              "expression": "COMP_TIME_HOURS",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_UNDEF",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "COMP_TIME_UNDEF",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "lkp_PP_NUM",
+              "datatype": "decimal",
+              "porttype": "INPUT",
+              "precision": "2",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "lkp_PP_END_YEAR",
+              "datatype": "decimal",
+              "porttype": "INPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "o_PP_END_YEAR",
+              "datatype": "decimal",
+              "porttype": "OUTPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "lkp_PP_END_YEAR\r\n",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            },
+            {
+              "name": "o_PP_NUM",
+              "datatype": "decimal",
+              "porttype": "OUTPUT",
+              "precision": "2",
+              "scale": "0",
+              "expression": "lkp_PP_NUM\r\n",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            },
+            {
+              "name": "o_PP_YEAR_NUM",
+              "datatype": "decimal",
+              "porttype": "OUTPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "TO_DECIMAL(\r\nTO_CHAR(lkp_PP_END_YEAR) || \r\nLPAD(TO_CHAR(lkp_PP_NUM), 2, '0'))\r\n",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Tracing Level": "Normal"
+          },
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "SSN",
+              "expression": "SSN",
+              "type": "GENERAL"
+            },
+            {
+              "field": "NAME",
+              "expression": "NAME",
+              "type": "GENERAL"
+            },
+            {
+              "field": "CURRENT_ACCT",
+              "expression": "CURRENT_ACCT",
+              "type": "GENERAL"
+            },
+            {
+              "field": "CURRENT_ORG",
+              "expression": "CURRENT_ORG",
+              "type": "GENERAL"
+            },
+            {
+              "field": "FLSA_STATUS",
+              "expression": "FLSA_STATUS",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COMP_TIME_CUR_BAL",
+              "expression": "COMP_TIME_CUR_BAL",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COMP_TIME_YEAR_EARNED",
+              "expression": "COMP_TIME_YEAR_EARNED",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_PP_END_DATE",
+              "expression": "IIF(IS_DATE(PP_END_DATE, 'YYYYMMDD'),\r\n                                   TO_DATE(PP_END_DATE, 'YYYYMMDD')\r\n       )",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_DAILY_DATE_EARNED",
+              "expression": "IIF(IS_DATE(DAILY_DATE_EARNED, 'YYYYMMDD'),\r\n                                   TO_DATE(DAILY_DATE_EARNED, 'YYYYMMDD')\r\n       )",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COMP_TIME_RATE",
+              "expression": "COMP_TIME_RATE",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COMP_TIME_HOURS",
+              "expression": "COMP_TIME_HOURS",
+              "type": "GENERAL"
+            },
+            {
+              "field": "COMP_TIME_UNDEF",
+              "expression": "COMP_TIME_UNDEF",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_PP_END_YEAR",
+              "expression": "lkp_PP_END_YEAR\r\n",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_PP_NUM",
+              "expression": "lkp_PP_NUM\r\n",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_PP_YEAR_NUM",
+              "expression": "TO_DECIMAL(\r\nTO_CHAR(lkp_PP_END_YEAR) || \r\nLPAD(TO_CHAR(lkp_PP_NUM), 2, '0'))\r\n",
+              "type": "GENERAL"
+            }
+          ],
+          "filter_condition": null
+        },
+        "fil_Valid_Records": {
+          "name": "fil_Valid_Records",
+          "type": "Filter",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "SSN",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "9",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "NAME",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "30",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURRENT_ACCT",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURRENT_ORG",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "7",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "FLSA_STATUS",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "1",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_CUR_BAL",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "2",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_YEAR_EARNED",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_END_DATE",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "DAILY_DATE_EARNED",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_RATE",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "2",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_HOURS",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "8",
+              "scale": "2",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "COMP_TIME_UNDEF",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURR_PP_FLAG",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "1",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "VALID_RECORD_FLAG",
+              "datatype": "integer",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Filter Condition": "VALID_RECORD_FLAG = TRUE",
+            "Tracing Level": "Normal"
+          },
+          "sql_query": null,
+          "expression_logic": [],
+          "filter_condition": "VALID_RECORD_FLAG = TRUE"
+        }
+      },
+      "instances": [
+        {
+          "name": "COMP_TIME_DAILY_TBL",
+          "type": "TARGET",
+          "transformation_name": "COMP_TIME_DAILY_TBL",
+          "transformation_type": "Target Definition",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "U0287D01",
+          "type": "SOURCE",
+          "transformation_name": "U0287D01",
+          "transformation_type": "Source Definition",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "FlatFile",
+          "associated_sources": []
+        },
+        {
+          "name": "SQ_U0287D01",
+          "type": "TRANSFORMATION",
+          "transformation_name": "SQ_U0287D01",
+          "transformation_type": "Source Qualifier",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": [
+            "U0287D01"
+          ]
+        },
+        {
+          "name": "exp_Initial",
+          "type": "TRANSFORMATION",
+          "transformation_name": "exp_Initial",
+          "transformation_type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "exp_Final",
+          "type": "TRANSFORMATION",
+          "transformation_name": "exp_Final",
+          "transformation_type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "lkp_PAY_PERIOD",
+          "type": "TRANSFORMATION",
+          "transformation_name": "lkp_PAY_PERIOD",
+          "transformation_type": "Lookup Procedure",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "exp_Convert",
+          "type": "TRANSFORMATION",
+          "transformation_name": "exp_Convert",
+          "transformation_type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "fil_Valid_Records",
+          "type": "TRANSFORMATION",
+          "transformation_name": "fil_Valid_Records",
+          "transformation_type": "Filter",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        }
+      ],
+      "connectors": [
+        {
+          "fromfield": "COMP_TIME_RATE",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "COMP_TIME_RATE",
+          "toinstance": "COMP_TIME_DAILY_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "COMP_TIME_HOURS",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "COMP_TIME_HOURS",
+          "toinstance": "COMP_TIME_DAILY_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "COMP_TIME_UNDEF",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "COMP_TIME_UNDEF",
+          "toinstance": "COMP_TIME_DAILY_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "PP_END_YEAR",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "PP_END_YEAR",
+          "toinstance": "COMP_TIME_DAILY_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "PP_NUM",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "PP_NUM",
+          "toinstance": "COMP_TIME_DAILY_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "PP_YEAR_NUM",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "PP_YEAR_NUM",
+          "toinstance": "COMP_TIME_DAILY_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "SSN",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "SSN",
+          "toinstance": "COMP_TIME_DAILY_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "NAME",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "NAME",
+          "toinstance": "COMP_TIME_DAILY_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "CURRENT_ACCT",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "CURRENT_ACCT",
+          "toinstance": "COMP_TIME_DAILY_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "CURRENT_ORG",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "CURRENT_ORG",
+          "toinstance": "COMP_TIME_DAILY_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "FLSA_STATUS",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "FLSA_STATUS",
+          "toinstance": "COMP_TIME_DAILY_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "COMP_TIME_CUR_BAL",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "COMP_TIME_CUR_BAL",
+          "toinstance": "COMP_TIME_DAILY_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "COMP_TIME_YEAR_EARNED",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "COMP_TIME_YEAR_EARNED",
+          "toinstance": "COMP_TIME_DAILY_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "PP_END_DATE",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "PP_END_DATE",
+          "toinstance": "COMP_TIME_DAILY_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "DAILY_DATE_EARNED",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "DAILY_DATE_EARNED",
+          "toinstance": "COMP_TIME_DAILY_TBL",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "SSN",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "SSN",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "NAME",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "NAME",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "CURRENT_ACCT",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "CURRENT_ACCT",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "CURRENT_ORG",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "CURRENT_ORG",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "FLSA_STATUS",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "FLSA_STATUS",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "COMP_TIME_CUR_BAL",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "COMP_TIME_CUR_BAL",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "COMP_TIME_YEAR_EARNED",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "COMP_TIME_YEAR_EARNED",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "PP_END_DATE",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "PP_END_DATE",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "DAILY_DATE_EARNED",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "DAILY_DATE_EARNED",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "COMP_TIME_RATE",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "COMP_TIME_RATE",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "COMP_TIME_HOURS",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "COMP_TIME_HOURS",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "COMP_TIME_UNDEF",
+          "frominstance": "U0287D01",
+          "frominstancetype": "Source Definition",
+          "tofield": "COMP_TIME_UNDEF",
+          "toinstance": "SQ_U0287D01",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "SSN",
+          "frominstance": "SQ_U0287D01",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "SSN",
+          "toinstance": "exp_Initial",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "NAME",
+          "frominstance": "SQ_U0287D01",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "NAME",
+          "toinstance": "exp_Initial",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "CURRENT_ACCT",
+          "frominstance": "SQ_U0287D01",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "CURRENT_ACCT",
+          "toinstance": "exp_Initial",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "CURRENT_ORG",
+          "frominstance": "SQ_U0287D01",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "CURRENT_ORG",
+          "toinstance": "exp_Initial",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "FLSA_STATUS",
+          "frominstance": "SQ_U0287D01",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "FLSA_STATUS",
+          "toinstance": "exp_Initial",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COMP_TIME_CUR_BAL",
+          "frominstance": "SQ_U0287D01",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "COMP_TIME_CUR_BAL",
+          "toinstance": "exp_Initial",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COMP_TIME_YEAR_EARNED",
+          "frominstance": "SQ_U0287D01",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "COMP_TIME_YEAR_EARNED",
+          "toinstance": "exp_Initial",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "PP_END_DATE",
+          "frominstance": "SQ_U0287D01",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "PP_END_DATE",
+          "toinstance": "exp_Initial",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "DAILY_DATE_EARNED",
+          "frominstance": "SQ_U0287D01",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "DAILY_DATE_EARNED",
+          "toinstance": "exp_Initial",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COMP_TIME_RATE",
+          "frominstance": "SQ_U0287D01",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "COMP_TIME_RATE",
+          "toinstance": "exp_Initial",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COMP_TIME_HOURS",
+          "frominstance": "SQ_U0287D01",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "COMP_TIME_HOURS",
+          "toinstance": "exp_Initial",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COMP_TIME_UNDEF",
+          "frominstance": "SQ_U0287D01",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "COMP_TIME_UNDEF",
+          "toinstance": "exp_Initial",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "SSN",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "SSN",
+          "toinstance": "fil_Valid_Records",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "NAME",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "NAME",
+          "toinstance": "fil_Valid_Records",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "CURRENT_ACCT",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "CURRENT_ACCT",
+          "toinstance": "fil_Valid_Records",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "CURRENT_ORG",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "CURRENT_ORG",
+          "toinstance": "fil_Valid_Records",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "FLSA_STATUS",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "FLSA_STATUS",
+          "toinstance": "fil_Valid_Records",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "COMP_TIME_CUR_BAL",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "COMP_TIME_CUR_BAL",
+          "toinstance": "fil_Valid_Records",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "COMP_TIME_YEAR_EARNED",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "COMP_TIME_YEAR_EARNED",
+          "toinstance": "fil_Valid_Records",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "PP_END_DATE",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "PP_END_DATE",
+          "toinstance": "fil_Valid_Records",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "DAILY_DATE_EARNED",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "DAILY_DATE_EARNED",
+          "toinstance": "fil_Valid_Records",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "COMP_TIME_RATE",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "COMP_TIME_RATE",
+          "toinstance": "fil_Valid_Records",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "COMP_TIME_HOURS",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "COMP_TIME_HOURS",
+          "toinstance": "fil_Valid_Records",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "COMP_TIME_UNDEF",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "COMP_TIME_UNDEF",
+          "toinstance": "fil_Valid_Records",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "o_CURR_PP_FLAG",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "CURR_PP_FLAG",
+          "toinstance": "fil_Valid_Records",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "o_VALID_RECORD_FLAG",
+          "frominstance": "exp_Initial",
+          "frominstancetype": "Expression",
+          "tofield": "VALID_RECORD_FLAG",
+          "toinstance": "fil_Valid_Records",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "o_PP_END_YEAR",
+          "frominstance": "exp_Convert",
+          "frominstancetype": "Expression",
+          "tofield": "PP_END_YEAR",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "o_PP_NUM",
+          "frominstance": "exp_Convert",
+          "frominstancetype": "Expression",
+          "tofield": "PP_NUM",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "o_PP_YEAR_NUM",
+          "frominstance": "exp_Convert",
+          "frominstancetype": "Expression",
+          "tofield": "PP_YEAR_NUM",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "SSN",
+          "frominstance": "exp_Convert",
+          "frominstancetype": "Expression",
+          "tofield": "SSN",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "NAME",
+          "frominstance": "exp_Convert",
+          "frominstancetype": "Expression",
+          "tofield": "NAME",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "CURRENT_ACCT",
+          "frominstance": "exp_Convert",
+          "frominstancetype": "Expression",
+          "tofield": "CURRENT_ACCT",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "CURRENT_ORG",
+          "frominstance": "exp_Convert",
+          "frominstancetype": "Expression",
+          "tofield": "CURRENT_ORG",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "FLSA_STATUS",
+          "frominstance": "exp_Convert",
+          "frominstancetype": "Expression",
+          "tofield": "FLSA_STATUS",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COMP_TIME_CUR_BAL",
+          "frominstance": "exp_Convert",
+          "frominstancetype": "Expression",
+          "tofield": "COMP_TIME_CUR_BAL",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COMP_TIME_YEAR_EARNED",
+          "frominstance": "exp_Convert",
+          "frominstancetype": "Expression",
+          "tofield": "COMP_TIME_YEAR_EARNED",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "o_PP_END_DATE",
+          "frominstance": "exp_Convert",
+          "frominstancetype": "Expression",
+          "tofield": "PP_END_DATE",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "o_DAILY_DATE_EARNED",
+          "frominstance": "exp_Convert",
+          "frominstancetype": "Expression",
+          "tofield": "DAILY_DATE_EARNED",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COMP_TIME_RATE",
+          "frominstance": "exp_Convert",
+          "frominstancetype": "Expression",
+          "tofield": "COMP_TIME_RATE",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COMP_TIME_HOURS",
+          "frominstance": "exp_Convert",
+          "frominstancetype": "Expression",
+          "tofield": "COMP_TIME_HOURS",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COMP_TIME_UNDEF",
+          "frominstance": "exp_Convert",
+          "frominstancetype": "Expression",
+          "tofield": "COMP_TIME_UNDEF",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "CURR_PP_FLAG",
+          "frominstance": "fil_Valid_Records",
+          "frominstancetype": "Filter",
+          "tofield": "in_CURR_PP_FLAG",
+          "toinstance": "lkp_PAY_PERIOD",
+          "toinstancetype": "Lookup Procedure"
+        },
+        {
+          "fromfield": "PP_NUM",
+          "frominstance": "lkp_PAY_PERIOD",
+          "frominstancetype": "Lookup Procedure",
+          "tofield": "lkp_PP_NUM",
+          "toinstance": "exp_Convert",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "PP_END_YEAR",
+          "frominstance": "lkp_PAY_PERIOD",
+          "frominstancetype": "Lookup Procedure",
+          "tofield": "lkp_PP_END_YEAR",
+          "toinstance": "exp_Convert",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COMP_TIME_YEAR_EARNED",
+          "frominstance": "fil_Valid_Records",
+          "frominstancetype": "Filter",
+          "tofield": "COMP_TIME_YEAR_EARNED",
+          "toinstance": "exp_Convert",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "PP_END_DATE",
+          "frominstance": "fil_Valid_Records",
+          "frominstancetype": "Filter",
+          "tofield": "PP_END_DATE",
+          "toinstance": "exp_Convert",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "DAILY_DATE_EARNED",
+          "frominstance": "fil_Valid_Records",
+          "frominstancetype": "Filter",
+          "tofield": "DAILY_DATE_EARNED",
+          "toinstance": "exp_Convert",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COMP_TIME_RATE",
+          "frominstance": "fil_Valid_Records",
+          "frominstancetype": "Filter",
+          "tofield": "COMP_TIME_RATE",
+          "toinstance": "exp_Convert",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COMP_TIME_HOURS",
+          "frominstance": "fil_Valid_Records",
+          "frominstancetype": "Filter",
+          "tofield": "COMP_TIME_HOURS",
+          "toinstance": "exp_Convert",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COMP_TIME_UNDEF",
+          "frominstance": "fil_Valid_Records",
+          "frominstancetype": "Filter",
+          "tofield": "COMP_TIME_UNDEF",
+          "toinstance": "exp_Convert",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "SSN",
+          "frominstance": "fil_Valid_Records",
+          "frominstancetype": "Filter",
+          "tofield": "SSN",
+          "toinstance": "exp_Convert",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "NAME",
+          "frominstance": "fil_Valid_Records",
+          "frominstancetype": "Filter",
+          "tofield": "NAME",
+          "toinstance": "exp_Convert",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "CURRENT_ACCT",
+          "frominstance": "fil_Valid_Records",
+          "frominstancetype": "Filter",
+          "tofield": "CURRENT_ACCT",
+          "toinstance": "exp_Convert",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "CURRENT_ORG",
+          "frominstance": "fil_Valid_Records",
+          "frominstancetype": "Filter",
+          "tofield": "CURRENT_ORG",
+          "toinstance": "exp_Convert",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "FLSA_STATUS",
+          "frominstance": "fil_Valid_Records",
+          "frominstancetype": "Filter",
+          "tofield": "FLSA_STATUS",
+          "toinstance": "exp_Convert",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COMP_TIME_CUR_BAL",
+          "frominstance": "fil_Valid_Records",
+          "frominstancetype": "Filter",
+          "tofield": "COMP_TIME_CUR_BAL",
+          "toinstance": "exp_Convert",
+          "toinstancetype": "Expression"
+        }
+      ],
+      "targetloadorder": [
+        {
+          "order": "1",
+          "targetinstance": "COMP_TIME_DAILY_TBL"
+        }
+      ],
+      "variables": {}
+    },
+    "m_COMPTIME_Current_Pay_Period": {
+      "name": "m_COMPTIME_Current_Pay_Period",
+      "description": "This mapping returns the Current Pay Period from the Pay Period table.",
+      "isvalid": "YES",
+      "transformations": {
+        "SQ_PAY_PERIOD": {
+          "name": "SQ_PAY_PERIOD",
+          "type": "Source Qualifier",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "PP_NUM",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "2",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_END_YEAR",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_START_DTE",
+              "datatype": "date/time",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "29",
+              "scale": "9",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_END_DTE",
+              "datatype": "date/time",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "29",
+              "scale": "9",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "LV_NUM",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "2",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "LV_YEAR",
+              "datatype": "decimal",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PAY_DTE",
+              "datatype": "date/time",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "29",
+              "scale": "9",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "CURR_PP_FLAG",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "1",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Sql Query": "",
+            "User Defined Join": "",
+            "Source Filter": "CURR_PP_FLAG = 'Y'",
+            "Number Of Sorted Ports": "0",
+            "Tracing Level": "Normal",
+            "Select Distinct": "NO",
+            "Is Partitionable": "NO",
+            "Pre SQL": "",
+            "Post SQL": "",
+            "Output is deterministic": "NO",
+            "Output is repeatable": "Never"
+          },
+          "sql_query": "",
+          "expression_logic": [],
+          "filter_condition": null
+        },
+        "exp_Build_Pay_Period": {
+          "name": "exp_Build_Pay_Period",
+          "type": "Expression",
+          "description": "This transformation combines the Current Pay Period and Current year into one string.",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "PP_NUM",
+              "datatype": "decimal",
+              "porttype": "INPUT",
+              "precision": "2",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_END_YEAR",
+              "datatype": "decimal",
+              "porttype": "INPUT",
+              "precision": "4",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "v_PP_NUM",
+              "datatype": "string",
+              "porttype": "LOCAL VARIABLE",
+              "precision": "2",
+              "scale": "0",
+              "expression": "IIF(PP_NUM < 10,\r\n       LPAD(TO_CHAR(PP_NUM), 2, '0'),\r\n    TO_CHAR(PP_NUM)\r\n)",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "o_PAY_PERIOD",
+              "datatype": "string",
+              "porttype": "OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "TO_CHAR(PP_END_YEAR) || v_PP_NUM",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            },
+            {
+              "name": "v_PAY_PERIOD",
+              "datatype": "string",
+              "porttype": "LOCAL VARIABLE",
+              "precision": "6",
+              "scale": "0",
+              "expression": "TO_CHAR(PP_END_YEAR) || v_PP_NUM",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "o_MAP_PP_YEAR_NUM",
+              "datatype": "string",
+              "porttype": "OUTPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "SETVARIABLE($$MAP_PP_YEAR_NUM, v_PAY_PERIOD)",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            },
+            {
+              "name": "o_PP_END_YEAR",
+              "datatype": "integer",
+              "porttype": "OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "SETVARIABLE($$MAP_PP_END_YEAR, PP_END_YEAR)",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            },
+            {
+              "name": "o_PP_NUM",
+              "datatype": "integer",
+              "porttype": "OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "SETVARIABLE($$MAP_PP_NUM, PP_NUM)",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Tracing Level": "Normal"
+          },
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "v_PP_NUM",
+              "expression": "IIF(PP_NUM < 10,\r\n       LPAD(TO_CHAR(PP_NUM), 2, '0'),\r\n    TO_CHAR(PP_NUM)\r\n)",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_PAY_PERIOD",
+              "expression": "TO_CHAR(PP_END_YEAR) || v_PP_NUM",
+              "type": "GENERAL"
+            },
+            {
+              "field": "v_PAY_PERIOD",
+              "expression": "TO_CHAR(PP_END_YEAR) || v_PP_NUM",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_MAP_PP_YEAR_NUM",
+              "expression": "SETVARIABLE($$MAP_PP_YEAR_NUM, v_PAY_PERIOD)",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_PP_END_YEAR",
+              "expression": "SETVARIABLE($$MAP_PP_END_YEAR, PP_END_YEAR)",
+              "type": "GENERAL"
+            },
+            {
+              "field": "o_PP_NUM",
+              "expression": "SETVARIABLE($$MAP_PP_NUM, PP_NUM)",
+              "type": "GENERAL"
+            }
+          ],
+          "filter_condition": null
+        },
+        "exp_Final": {
+          "name": "exp_Final",
+          "type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "PAY_PERIOD",
+              "datatype": "string",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "PAY_PERIOD",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "MAP_PP_YEAR_NUM",
+              "datatype": "string",
+              "porttype": "INPUT",
+              "precision": "6",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_END_YEAR",
+              "datatype": "integer",
+              "porttype": "INPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "PP_NUM",
+              "datatype": "integer",
+              "porttype": "INPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Tracing Level": "Normal"
+          },
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "PAY_PERIOD",
+              "expression": "PAY_PERIOD",
+              "type": "GENERAL"
+            }
+          ],
+          "filter_condition": null
+        }
+      },
+      "instances": [
+        {
+          "name": "COMP_TIME_DATE_FILE",
+          "type": "TARGET",
+          "transformation_name": "COMP_TIME_DATE_FILE",
+          "transformation_type": "Target Definition",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "PAY_PERIOD",
+          "type": "SOURCE",
+          "transformation_name": "PAY_PERIOD",
+          "transformation_type": "Source Definition",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "ORA_BIIS",
+          "associated_sources": []
+        },
+        {
+          "name": "SQ_PAY_PERIOD",
+          "type": "TRANSFORMATION",
+          "transformation_name": "SQ_PAY_PERIOD",
+          "transformation_type": "Source Qualifier",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": [
+            "PAY_PERIOD"
+          ]
+        },
+        {
+          "name": "exp_Build_Pay_Period",
+          "type": "TRANSFORMATION",
+          "transformation_name": "exp_Build_Pay_Period",
+          "transformation_type": "Expression",
+          "description": "This transformation combines the Current Pay Period and Current year into one string.",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "exp_Final",
+          "type": "TRANSFORMATION",
+          "transformation_name": "exp_Final",
+          "transformation_type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        }
+      ],
+      "connectors": [
+        {
+          "fromfield": "PAY_PERIOD",
+          "frominstance": "exp_Final",
+          "frominstancetype": "Expression",
+          "tofield": "PAY_PERIOD",
+          "toinstance": "COMP_TIME_DATE_FILE",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "PP_NUM",
+          "frominstance": "PAY_PERIOD",
+          "frominstancetype": "Source Definition",
+          "tofield": "PP_NUM",
+          "toinstance": "SQ_PAY_PERIOD",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "PP_END_YEAR",
+          "frominstance": "PAY_PERIOD",
+          "frominstancetype": "Source Definition",
+          "tofield": "PP_END_YEAR",
+          "toinstance": "SQ_PAY_PERIOD",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "PP_START_DTE",
+          "frominstance": "PAY_PERIOD",
+          "frominstancetype": "Source Definition",
+          "tofield": "PP_START_DTE",
+          "toinstance": "SQ_PAY_PERIOD",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "PP_END_DTE",
+          "frominstance": "PAY_PERIOD",
+          "frominstancetype": "Source Definition",
+          "tofield": "PP_END_DTE",
+          "toinstance": "SQ_PAY_PERIOD",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "LV_NUM",
+          "frominstance": "PAY_PERIOD",
+          "frominstancetype": "Source Definition",
+          "tofield": "LV_NUM",
+          "toinstance": "SQ_PAY_PERIOD",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "LV_YEAR",
+          "frominstance": "PAY_PERIOD",
+          "frominstancetype": "Source Definition",
+          "tofield": "LV_YEAR",
+          "toinstance": "SQ_PAY_PERIOD",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "PAY_DTE",
+          "frominstance": "PAY_PERIOD",
+          "frominstancetype": "Source Definition",
+          "tofield": "PAY_DTE",
+          "toinstance": "SQ_PAY_PERIOD",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "CURR_PP_FLAG",
+          "frominstance": "PAY_PERIOD",
+          "frominstancetype": "Source Definition",
+          "tofield": "CURR_PP_FLAG",
+          "toinstance": "SQ_PAY_PERIOD",
+          "toinstancetype": "Source Qualifier"
+        },
+        {
+          "fromfield": "PP_NUM",
+          "frominstance": "SQ_PAY_PERIOD",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "PP_NUM",
+          "toinstance": "exp_Build_Pay_Period",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "PP_END_YEAR",
+          "frominstance": "SQ_PAY_PERIOD",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "PP_END_YEAR",
+          "toinstance": "exp_Build_Pay_Period",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "o_PAY_PERIOD",
+          "frominstance": "exp_Build_Pay_Period",
+          "frominstancetype": "Expression",
+          "tofield": "PAY_PERIOD",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "o_MAP_PP_YEAR_NUM",
+          "frominstance": "exp_Build_Pay_Period",
+          "frominstancetype": "Expression",
+          "tofield": "MAP_PP_YEAR_NUM",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "o_PP_END_YEAR",
+          "frominstance": "exp_Build_Pay_Period",
+          "frominstancetype": "Expression",
+          "tofield": "PP_END_YEAR",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "o_PP_NUM",
+          "frominstance": "exp_Build_Pay_Period",
+          "frominstancetype": "Expression",
+          "tofield": "PP_NUM",
+          "toinstance": "exp_Final",
+          "toinstancetype": "Expression"
+        }
+      ],
+      "targetloadorder": [
+        {
+          "order": "1",
+          "targetinstance": "COMP_TIME_DATE_FILE"
+        }
+      ],
+      "variables": {
+        "$$MAP_PP_YEAR_NUM": {
+          "name": "$$MAP_PP_YEAR_NUM",
+          "datatype": "string",
+          "defaultvalue": "",
+          "description": "",
+          "userdefined": "YES"
+        },
+        "$$MAP_PP_END_YEAR": {
+          "name": "$$MAP_PP_END_YEAR",
+          "datatype": "integer",
+          "defaultvalue": "",
+          "description": "",
+          "userdefined": "YES"
+        },
+        "$$MAP_PP_NUM": {
+          "name": "$$MAP_PP_NUM",
+          "datatype": "integer",
+          "defaultvalue": "",
+          "description": "",
+          "userdefined": "YES"
+        }
+      }
+    }
+  },
+  "sources": {
+    "U0287D01": {
+      "name": "U0287D01",
+      "businessname": "",
+      "databasetype": "Flat File",
+      "dbdname": "FlatFile",
+      "description": "",
+      "fields": [
+        {
+          "name": "SSN",
+          "datatype": "string",
+          "fieldnumber": "1",
+          "length": "9",
+          "precision": "9",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "NAME",
+          "datatype": "string",
+          "fieldnumber": "2",
+          "length": "30",
+          "precision": "30",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "CURRENT_ACCT",
+          "datatype": "string",
+          "fieldnumber": "3",
+          "length": "6",
+          "precision": "6",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "CURRENT_ORG",
+          "datatype": "string",
+          "fieldnumber": "4",
+          "length": "7",
+          "precision": "7",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "FLSA_STATUS",
+          "datatype": "string",
+          "fieldnumber": "5",
+          "length": "1",
+          "precision": "1",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "COMP_TIME_CUR_BAL",
+          "datatype": "number",
+          "fieldnumber": "6",
+          "length": "8",
+          "precision": "8",
+          "scale": "2",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "COMP_TIME_YEAR_EARNED",
+          "datatype": "number",
+          "fieldnumber": "7",
+          "length": "4",
+          "precision": "4",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "PP_END_DATE",
+          "datatype": "string",
+          "fieldnumber": "8",
+          "length": "8",
+          "precision": "8",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "DAILY_DATE_EARNED",
+          "datatype": "string",
+          "fieldnumber": "9",
+          "length": "8",
+          "precision": "8",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "COMP_TIME_RATE",
+          "datatype": "number",
+          "fieldnumber": "10",
+          "length": "6",
+          "precision": "6",
+          "scale": "2",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "COMP_TIME_HOURS",
+          "datatype": "number",
+          "fieldnumber": "11",
+          "length": "8",
+          "precision": "8",
+          "scale": "2",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "COMP_TIME_UNDEF",
+          "datatype": "number",
+          "fieldnumber": "12",
+          "length": "6",
+          "precision": "6",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        }
+      ],
+      "attributes": {
+        "Base Table Name": "",
+        "Search Specification": "",
+        "Sort Specification": "",
+        "Datetime Format": "A  19 mm/dd/yyyy hh24:mi:ss",
+        "Thousand Separator": "None",
+        "Decimal Separator": ".",
+        "Add Currently Processed Flat File Name Port": "NO",
+        "Source TimeStamp": ""
+      }
+    },
+    "PAY_PERIOD": {
+      "name": "PAY_PERIOD",
+      "businessname": "",
+      "databasetype": "Oracle",
+      "dbdname": "ORA_BIIS",
+      "description": "",
+      "fields": [
+        {
+          "name": "PP_NUM",
+          "datatype": "number(p,s)",
+          "fieldnumber": "1",
+          "length": "4",
+          "precision": "2",
+          "scale": "0",
+          "keytype": "PRIMARY KEY",
+          "nullable": "NOTNULL",
+          "description": ""
+        },
+        {
+          "name": "PP_END_YEAR",
+          "datatype": "number(p,s)",
+          "fieldnumber": "2",
+          "length": "6",
+          "precision": "4",
+          "scale": "0",
+          "keytype": "PRIMARY KEY",
+          "nullable": "NOTNULL",
+          "description": ""
+        },
+        {
+          "name": "PP_START_DTE",
+          "datatype": "date",
+          "fieldnumber": "3",
+          "length": "19",
+          "precision": "19",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "PP_END_DTE",
+          "datatype": "date",
+          "fieldnumber": "4",
+          "length": "19",
+          "precision": "19",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "LV_NUM",
+          "datatype": "number(p,s)",
+          "fieldnumber": "5",
+          "length": "4",
+          "precision": "2",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "LV_YEAR",
+          "datatype": "number(p,s)",
+          "fieldnumber": "6",
+          "length": "6",
+          "precision": "4",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "PAY_DTE",
+          "datatype": "date",
+          "fieldnumber": "7",
+          "length": "19",
+          "precision": "19",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "CURR_PP_FLAG",
+          "datatype": "varchar2",
+          "fieldnumber": "8",
+          "length": "0",
+          "precision": "1",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "HOLIDAY_1",
+          "datatype": "date",
+          "fieldnumber": "9",
+          "length": "19",
+          "precision": "19",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "HOLIDAY_2",
+          "datatype": "date",
+          "fieldnumber": "10",
+          "length": "19",
+          "precision": "19",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        }
+      ],
+      "attributes": {}
+    }
+  },
+  "targets": {
+    "COUNTER_TBL": {
+      "name": "COUNTER_TBL",
+      "businessname": "",
+      "databasetype": "Oracle",
+      "description": "",
+      "fields": [
+        {
+          "name": "RUN_DATE",
+          "datatype": "date",
+          "fieldnumber": "1",
+          "precision": "19",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "PROCESS_NAME",
+          "datatype": "varchar2",
+          "fieldnumber": "2",
+          "precision": "100",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "COUNTER_DESCRIPTION",
+          "datatype": "varchar2",
+          "fieldnumber": "3",
+          "precision": "200",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "COUNTER_VALUE",
+          "datatype": "number",
+          "fieldnumber": "4",
+          "precision": "15",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "PP_END_YEAR",
+          "datatype": "number(p,s)",
+          "fieldnumber": "5",
+          "precision": "4",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "PP_NUM",
+          "datatype": "number(p,s)",
+          "fieldnumber": "6",
+          "precision": "2",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "CYCLE_ID",
+          "datatype": "number(p,s)",
+          "fieldnumber": "7",
+          "precision": "1",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        }
+      ],
+      "attributes": {}
+    },
+    "COMPTIME_MESSAGE_FILE": {
+      "name": "COMPTIME_MESSAGE_FILE",
+      "businessname": "",
+      "databasetype": "Flat File",
+      "description": "",
+      "fields": [
+        {
+          "name": "SUBJECT",
+          "datatype": "string",
+          "fieldnumber": "1",
+          "precision": "100",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "MESSAGE",
+          "datatype": "string",
+          "fieldnumber": "2",
+          "precision": "300",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        }
+      ],
+      "attributes": {
+        "Datetime Format": "A  19 mm/dd/yyyy hh24:mi:ss",
+        "Thousand Separator": "None",
+        "Decimal Separator": ".",
+        "Line Endings": "System default"
+      }
+    },
+    "COMP_TIME_DAILY_TBL": {
+      "name": "COMP_TIME_DAILY_TBL",
+      "businessname": "",
+      "databasetype": "Oracle",
+      "description": "",
+      "fields": [
+        {
+          "name": "PP_END_YEAR",
+          "datatype": "number(p,s)",
+          "fieldnumber": "1",
+          "precision": "4",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "PP_NUM",
+          "datatype": "number(p,s)",
+          "fieldnumber": "2",
+          "precision": "2",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "PP_YEAR_NUM",
+          "datatype": "number(p,s)",
+          "fieldnumber": "3",
+          "precision": "6",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "SSN",
+          "datatype": "varchar2",
+          "fieldnumber": "4",
+          "precision": "9",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "NAME",
+          "datatype": "varchar2",
+          "fieldnumber": "5",
+          "precision": "30",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "CURRENT_ACCT",
+          "datatype": "varchar2",
+          "fieldnumber": "6",
+          "precision": "6",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "CURRENT_ORG",
+          "datatype": "varchar2",
+          "fieldnumber": "7",
+          "precision": "7",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "FLSA_STATUS",
+          "datatype": "varchar2",
+          "fieldnumber": "8",
+          "precision": "1",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "COMP_TIME_CUR_BAL",
+          "datatype": "number(p,s)",
+          "fieldnumber": "9",
+          "precision": "8",
+          "scale": "2",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "COMP_TIME_YEAR_EARNED",
+          "datatype": "number(p,s)",
+          "fieldnumber": "10",
+          "precision": "4",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "PP_END_DATE",
+          "datatype": "date",
+          "fieldnumber": "11",
+          "precision": "19",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "DAILY_DATE_EARNED",
+          "datatype": "date",
+          "fieldnumber": "12",
+          "precision": "19",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "COMP_TIME_RATE",
+          "datatype": "number(p,s)",
+          "fieldnumber": "13",
+          "precision": "6",
+          "scale": "2",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "COMP_TIME_HOURS",
+          "datatype": "number(p,s)",
+          "fieldnumber": "14",
+          "precision": "8",
+          "scale": "2",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        },
+        {
+          "name": "COMP_TIME_UNDEF",
+          "datatype": "number(p,s)",
+          "fieldnumber": "15",
+          "precision": "6",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        }
+      ],
+      "attributes": {}
+    },
+    "COMP_TIME_DATE_FILE": {
+      "name": "COMP_TIME_DATE_FILE",
+      "businessname": "",
+      "databasetype": "Flat File",
+      "description": "",
+      "fields": [
+        {
+          "name": "PAY_PERIOD",
+          "datatype": "string",
+          "fieldnumber": "1",
+          "precision": "6",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": ""
+        }
+      ],
+      "attributes": {
+        "Datetime Format": "A  19 mm/dd/yyyy hh24:mi:ss",
+        "Thousand Separator": "None",
+        "Decimal Separator": ".",
+        "Line Endings": "System default"
+      }
+    }
+  },
+  "transformations": {},
+  "maplets": {}
+}

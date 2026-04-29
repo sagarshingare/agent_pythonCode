@@ -1,0 +1,88 @@
+# System Settings for Informatica to PySpark Migration
+system:
+  name: "Informatica Migration Agent"
+  version: "1.0.0"
+  environment: "production"
+  log_level: "INFO"
+
+# XML Input Configuration
+xml_config:
+  input_file: "data/sample_informatic_export.xml"
+  parse_maplets: true
+  parse_transformations: true
+  include_metadata: true
+
+# Code Generation Configuration
+codegen:
+  pyspark_version: "3.3.0"
+  output_format: "modular"
+  include_comments: true
+  include_type_hints: true
+  repartition_default: 8
+  enable_broadcast_joins: true
+  broadcast_threshold_mb: 100
+
+# Data Generation Configuration
+data_generation:
+  enable_input_generation: true
+  enable_output_generation: true
+  input_sample_rows: 100
+  output_sample_rows: 100
+  seed: 42
+
+# Validation Configuration
+validation:
+  enable_row_count_checks: true
+  enable_hash_validation: true
+  enable_null_checks: true
+  enable_data_type_checks: true
+
+# Optimization Configuration
+optimization:
+  enable_repartitioning: true
+  enable_caching: true
+  enable_broadcast_optimization: true
+  enable_query_optimization: true
+
+# Airflow DAG Configuration
+airflow:
+  dag_id_prefix: "informatica_migration"
+  schedule_interval: "daily"
+  start_date: "2024-01-01"
+  catchup: false
+  max_active_runs: 1
+
+# RAG Configuration
+rag:
+  enable_knowledge_base: true
+  knowledge_base_path: "rag/knowledge_base.json"
+  memory_store_path: "rag/memory_store.json"
+  enable_semantic_search: true
+
+# Knowledge Graph Configuration
+knowledge_graph:
+  enable_graph_building: true
+  graph_output_format: "graphml"
+  save_graph: true
+  graph_path: "knowledge_graph/transformation_graph"
+
+# Output Configuration
+output:
+  pyspark_output: "output/pyspark/job.py"
+  sql_validation_output: "output/sql/validation.sql"
+  dag_output: "output/dags/dag.py"
+  documentation_output: "output/docs/mapping_doc.md"
+  generated_input_data: "data/generated_input.csv"
+  generated_output_data: "data/generated_output.csv"
+
+# Logging Configuration
+logging:
+  log_file: "migration_agent.log"
+  log_format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  console_output: true
+
+# Error Handling
+error_handling:
+  strict_mode: false
+  log_errors: true
+  continue_on_error: false

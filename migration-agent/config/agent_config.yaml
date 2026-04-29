@@ -1,0 +1,63 @@
+# Agent Configuration
+agents:
+  planner:
+    enabled: true
+    description: "Orchestrates the entire migration flow"
+    timeout_seconds: 300
+    max_retries: 3
+    
+  spec:
+    enabled: true
+    description: "Converts XML to JSON to Canonical format"
+    timeout_seconds: 120
+    parallel_processing: false
+    
+  codegen:
+    enabled: true
+    description: "Generates PySpark code from canonical model"
+    timeout_seconds: 180
+    optimization_level: 2
+    include_documentation: true
+    
+  validation:
+    enabled: true
+    description: "Generates validation SQL queries"
+    timeout_seconds: 120
+    include_row_counts: true
+    include_hash_validation: true
+    
+  optimization:
+    enabled: true
+    description: "Applies performance optimizations"
+    timeout_seconds: 120
+    enable_repartitioning: true
+    enable_broadcast: true
+    
+  orchestration:
+    enabled: true
+    description: "Generates Airflow DAG"
+    timeout_seconds: 120
+    framework: "airflow"
+    include_monitoring: true
+    
+  documentation:
+    enabled: true
+    description: "Generates documentation from XML"
+    timeout_seconds: 120
+    output_format: "markdown"
+    include_examples: true
+    include_lineage: true
+
+# Agent Execution Strategy
+execution:
+  strategy: "sequential"  # sequential or parallel
+  fail_on_error: true
+  log_execution: true
+  profile_agents: false
+
+# Memory and State Management
+memory:
+  enable_state_persistence: true
+  state_storage: "memory"  # memory, file, or database
+  max_memory_mb: 1024
+  cleanup_on_completion: false
