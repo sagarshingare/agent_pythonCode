@@ -160,6 +160,14 @@ python main.py \
   --data data
 ```
 
+
+```bash
+python main.py \
+  --xml data/informatic_export.xml \
+  --output output2 \
+  --data data2
+```
+
 ### With Custom Configuration
 
 ```bash

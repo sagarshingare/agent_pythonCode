@@ -1,0 +1,388 @@
+{
+  "repository": {
+    "name": "PROD_REPO",
+    "version": "186.93",
+    "codepage": "",
+    "databasetype": ""
+  },
+  "mappings": {
+    "M_BFSI_CUSTOMER_360": {
+      "name": "M_BFSI_CUSTOMER_360",
+      "description": "",
+      "isvalid": "",
+      "transformations": {
+        "SQ_CUSTOMER": {
+          "name": "SQ_CUSTOMER",
+          "type": "Source Qualifier",
+          "description": "",
+          "reusable": "NO",
+          "fields": [],
+          "attributes": {
+            "Sql Query": "SELECT * FROM SRC_CUSTOMER_TXN                    WHERE LAST_UPDATED_TS > $$LAST_SUCCESSFUL_RUN"
+          },
+          "sql_query": "SELECT * FROM SRC_CUSTOMER_TXN                    WHERE LAST_UPDATED_TS > $$LAST_SUCCESSFUL_RUN",
+          "expression_logic": [],
+          "filter_condition": null
+        },
+        "EXP_DERIVED_FIELDS": {
+          "name": "EXP_DERIVED_FIELDS",
+          "type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "TXN_FLAG",
+              "datatype": "",
+              "porttype": "",
+              "precision": "",
+              "scale": "",
+              "expression": "IIF(TXN_AMOUNT > 100000, 'HIGH', 'NORMAL')",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "VALID_TXN",
+              "datatype": "",
+              "porttype": "",
+              "precision": "",
+              "scale": "",
+              "expression": "IIF(ISNULL(TXN_AMOUNT), 0, 1)",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {},
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "TXN_FLAG",
+              "expression": "IIF(TXN_AMOUNT > 100000, 'HIGH', 'NORMAL')",
+              "type": ""
+            },
+            {
+              "field": "VALID_TXN",
+              "expression": "IIF(ISNULL(TXN_AMOUNT), 0, 1)",
+              "type": ""
+            }
+          ],
+          "filter_condition": null
+        },
+        "LKP_CUSTOMER_DIM": {
+          "name": "LKP_CUSTOMER_DIM",
+          "type": "Lookup",
+          "description": "",
+          "reusable": "NO",
+          "fields": [],
+          "attributes": {
+            "Lookup condition": "SRC.CUSTOMER_ID = DIM.CUSTOMER_ID"
+          },
+          "sql_query": null,
+          "expression_logic": [],
+          "filter_condition": null
+        },
+        "RTR_VALIDATION": {
+          "name": "RTR_VALIDATION",
+          "type": "Router",
+          "description": "",
+          "reusable": "NO",
+          "fields": [],
+          "attributes": {},
+          "sql_query": null,
+          "expression_logic": [],
+          "filter_condition": null
+        },
+        "AGG_TXN": {
+          "name": "AGG_TXN",
+          "type": "Aggregator",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "TOTAL_TXN",
+              "datatype": "",
+              "porttype": "",
+              "precision": "",
+              "scale": "",
+              "expression": "SUM(TXN_AMOUNT)",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "AVG_TXN",
+              "datatype": "",
+              "porttype": "",
+              "precision": "",
+              "scale": "",
+              "expression": "AVG(TXN_AMOUNT)",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "MAX_TXN",
+              "datatype": "",
+              "porttype": "",
+              "precision": "",
+              "scale": "",
+              "expression": "MAX(TXN_AMOUNT)",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {},
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "TOTAL_TXN",
+              "expression": "SUM(TXN_AMOUNT)",
+              "type": ""
+            },
+            {
+              "field": "AVG_TXN",
+              "expression": "AVG(TXN_AMOUNT)",
+              "type": ""
+            },
+            {
+              "field": "MAX_TXN",
+              "expression": "MAX(TXN_AMOUNT)",
+              "type": ""
+            }
+          ],
+          "filter_condition": null
+        },
+        "JNR_CUSTOMER": {
+          "name": "JNR_CUSTOMER",
+          "type": "Joiner",
+          "description": "",
+          "reusable": "NO",
+          "fields": [],
+          "attributes": {
+            "Join Type": "Master Outer"
+          },
+          "sql_query": null,
+          "expression_logic": [],
+          "filter_condition": null
+        },
+        "UPD_SCD2": {
+          "name": "UPD_SCD2",
+          "type": "Update Strategy",
+          "description": "",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "DD_FLAG",
+              "datatype": "",
+              "porttype": "",
+              "precision": "",
+              "scale": "",
+              "expression": "IIF(ISNULL(LKP_CUSTOMER_DIM.CUSTOMER_ID),                         DD_INSERT,                         IIF(EXP_DERIVED_FIELDS.TXN_AMOUNT != LKP_CUSTOMER_DIM.TXN_AMOUNT,                             DD_UPDATE,                             DD_REJECT))",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {},
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "DD_FLAG",
+              "expression": "IIF(ISNULL(LKP_CUSTOMER_DIM.CUSTOMER_ID),                         DD_INSERT,                         IIF(EXP_DERIVED_FIELDS.TXN_AMOUNT != LKP_CUSTOMER_DIM.TXN_AMOUNT,                             DD_UPDATE,                             DD_REJECT))",
+              "type": ""
+            }
+          ],
+          "filter_condition": null
+        }
+      },
+      "instances": [
+        {
+          "name": "TGT_CUSTOMER_AGG_INSTANCE",
+          "type": "",
+          "transformation_name": "TGT_CUSTOMER_AGG",
+          "transformation_type": "",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        }
+      ],
+      "connectors": [
+        {
+          "fromfield": "",
+          "frominstance": "SQ_CUSTOMER",
+          "frominstancetype": "",
+          "tofield": "",
+          "toinstance": "EXP_DERIVED_FIELDS",
+          "toinstancetype": ""
+        },
+        {
+          "fromfield": "",
+          "frominstance": "EXP_DERIVED_FIELDS",
+          "frominstancetype": "",
+          "tofield": "",
+          "toinstance": "RTR_VALIDATION",
+          "toinstancetype": ""
+        },
+        {
+          "fromfield": "",
+          "frominstance": "RTR_VALIDATION",
+          "frominstancetype": "",
+          "tofield": "",
+          "toinstance": "AGG_TXN",
+          "toinstancetype": ""
+        },
+        {
+          "fromfield": "",
+          "frominstance": "AGG_TXN",
+          "frominstancetype": "",
+          "tofield": "",
+          "toinstance": "UPD_SCD2",
+          "toinstancetype": ""
+        },
+        {
+          "fromfield": "",
+          "frominstance": "UPD_SCD2",
+          "frominstancetype": "",
+          "tofield": "",
+          "toinstance": "TGT_CUSTOMER_AGG_INSTANCE",
+          "toinstancetype": ""
+        }
+      ],
+      "targetloadorder": [],
+      "variables": {}
+    }
+  },
+  "sources": {
+    "SRC_CUSTOMER_TXN": {
+      "name": "SRC_CUSTOMER_TXN",
+      "businessname": "",
+      "databasetype": "Oracle",
+      "dbdname": "",
+      "description": "",
+      "fields": [
+        {
+          "name": "CUSTOMER_ID",
+          "datatype": "number",
+          "fieldnumber": "",
+          "length": "",
+          "precision": "10",
+          "scale": "",
+          "keytype": "NOT A KEY",
+          "nullable": "",
+          "description": ""
+        },
+        {
+          "name": "ACCOUNT_ID",
+          "datatype": "number",
+          "fieldnumber": "",
+          "length": "",
+          "precision": "10",
+          "scale": "",
+          "keytype": "NOT A KEY",
+          "nullable": "",
+          "description": ""
+        },
+        {
+          "name": "TXN_AMOUNT",
+          "datatype": "number",
+          "fieldnumber": "",
+          "length": "",
+          "precision": "12,2",
+          "scale": "",
+          "keytype": "NOT A KEY",
+          "nullable": "",
+          "description": ""
+        },
+        {
+          "name": "TXN_DATE",
+          "datatype": "date",
+          "fieldnumber": "",
+          "length": "",
+          "precision": "",
+          "scale": "",
+          "keytype": "NOT A KEY",
+          "nullable": "",
+          "description": ""
+        },
+        {
+          "name": "LAST_UPDATED_TS",
+          "datatype": "date",
+          "fieldnumber": "",
+          "length": "",
+          "precision": "",
+          "scale": "",
+          "keytype": "NOT A KEY",
+          "nullable": "",
+          "description": ""
+        }
+      ],
+      "attributes": {}
+    }
+  },
+  "targets": {
+    "TGT_CUSTOMER_AGG": {
+      "name": "TGT_CUSTOMER_AGG",
+      "businessname": "",
+      "databasetype": "Oracle",
+      "description": "",
+      "fields": [
+        {
+          "name": "CUSTOMER_ID",
+          "datatype": "number",
+          "fieldnumber": "",
+          "precision": "",
+          "scale": "",
+          "keytype": "NOT A KEY",
+          "nullable": "",
+          "description": ""
+        },
+        {
+          "name": "TOTAL_TXN",
+          "datatype": "number",
+          "fieldnumber": "",
+          "precision": "",
+          "scale": "",
+          "keytype": "NOT A KEY",
+          "nullable": "",
+          "description": ""
+        },
+        {
+          "name": "AVG_TXN",
+          "datatype": "number",
+          "fieldnumber": "",
+          "precision": "",
+          "scale": "",
+          "keytype": "NOT A KEY",
+          "nullable": "",
+          "description": ""
+        },
+        {
+          "name": "MAX_TXN",
+          "datatype": "number",
+          "fieldnumber": "",
+          "precision": "",
+          "scale": "",
+          "keytype": "NOT A KEY",
+          "nullable": "",
+          "description": ""
+        },
+        {
+          "name": "LOAD_DT",
+          "datatype": "date",
+          "fieldnumber": "",
+          "precision": "",
+          "scale": "",
+          "keytype": "NOT A KEY",
+          "nullable": "",
+          "description": ""
+        }
+      ],
+      "attributes": {}
+    }
+  },
+  "transformations": {},
+  "maplets": {}
+}

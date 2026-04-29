@@ -1,6 +1,6 @@
 {
-  "start_time": "2026-04-30T03:04:15.615133",
-  "end_time": "2026-04-30T03:04:17.428914",
+  "start_time": "2026-04-30T03:24:14.634150",
+  "end_time": "2026-04-30T03:24:14.697515",
   "agents": {
     "planner": {
       "agent_name": "PlannerAgent",
@@ -130,67 +130,55 @@
       "status": "COMPLETED",
       "output": {
         "xml_data_summary": {
-          "sources": 2,
-          "targets": 4,
-          "mappings": 3
+          "sources": 1,
+          "targets": 1,
+          "mappings": 1
         },
         "canonical_model_summary": {
-          "total_mappings": 3,
+          "total_mappings": 1,
           "mappings": [
-            "m_COMPTIME_Build_Message_Counters",
-            "m_COMPTIME_Load_COMP_TIME_DAILY_TBL",
-            "m_COMPTIME_Current_Pay_Period"
+            "M_BFSI_CUSTOMER_360"
           ],
-          "total_sources": 2,
-          "total_targets": 4,
+          "total_sources": 1,
+          "total_targets": 1,
           "sources": [
-            "U0287D01",
-            "PAY_PERIOD"
+            "SRC_CUSTOMER_TXN"
           ],
           "targets": [
-            "COUNTER_TBL",
-            "COMPTIME_MESSAGE_FILE",
-            "COMP_TIME_DAILY_TBL",
-            "COMP_TIME_DATE_FILE"
+            "TGT_CUSTOMER_AGG"
           ]
         },
         "mappings": [
-          "m_COMPTIME_Build_Message_Counters",
-          "m_COMPTIME_Load_COMP_TIME_DAILY_TBL",
-          "m_COMPTIME_Current_Pay_Period"
+          "M_BFSI_CUSTOMER_360"
         ],
-        "json_file": "output/informatica_export.json"
+        "json_file": "output2/informatica_export.json"
       },
       "error": null,
-      "execution_time_ms": 9
+      "execution_time_ms": 1
     },
     "codegen": {
       "agent_name": "CodeGenAgent",
       "status": "COMPLETED",
       "output": {
         "generated_files": [
-          "output/m_comptime_build_message_counters.py",
-          "output/m_comptime_load_comp_time_daily_tbl.py",
-          "output/m_comptime_current_pay_period.py",
-          "output/main_job.py"
+          "output2/m_bfsi_customer_360.py",
+          "output2/main_job.py"
         ],
-        "main_job_file": "output/main_job.py",
+        "main_job_file": "output2/main_job.py",
         "individual_mapping_files": [
-          "output/m_comptime_build_message_counters.py",
-          "output/m_comptime_load_comp_time_daily_tbl.py",
-          "output/m_comptime_current_pay_period.py"
+          "output2/m_bfsi_customer_360.py"
         ],
-        "total_lines": 293
+        "total_lines": 46
       },
       "error": null,
-      "execution_time_ms": 2
+      "execution_time_ms": 0
     },
     "validation": {
       "agent_name": "ValidationAgent",
       "status": "COMPLETED",
       "output": {
-        "validation_file": "output/validation.sql",
-        "total_queries": 3,
+        "validation_file": "output2/validation.sql",
+        "total_queries": 1,
         "query_types": [
           "row_count",
           "except",
@@ -204,7 +192,7 @@
       "agent_name": "OptimizationAgent",
       "status": "COMPLETED",
       "output": {
-        "optimized_file": "output/job_optimized.py",
+        "optimized_file": "output2/job_optimized.py",
         "optimizations_applied": [
           "repartitioning",
           "broadcast_joins",
@@ -219,8 +207,8 @@
       "agent_name": "OrchestrationAgent",
       "status": "COMPLETED",
       "output": {
-        "dag_file": "output/informatica_migration_dag.py",
-        "mappings_count": 3,
+        "dag_file": "output2/informatica_migration_dag.py",
+        "mappings_count": 1,
         "dag_id": "informatica_migration_dag"
       },
       "error": null,
@@ -231,21 +219,19 @@
       "status": "COMPLETED",
       "output": {
         "documentation_files": [
-          "output/m_comptime_build_message_counters_doc.md",
-          "output/m_comptime_load_comp_time_daily_tbl_doc.md",
-          "output/m_comptime_current_pay_period_doc.md",
-          "output/README.md"
+          "output2/m_bfsi_customer_360_doc.md",
+          "output2/README.md"
         ],
-        "index_file": "output/README.md",
-        "total_mappings_documented": 3
+        "index_file": "output2/README.md",
+        "total_mappings_documented": 1
       },
       "error": null,
       "execution_time_ms": 0
     }
   },
   "outputs": {
-    "canonical_models": 3,
-    "generated_code_lines": 39,
-    "validation_queries": 75
+    "canonical_models": 1,
+    "generated_code_lines": 33,
+    "validation_queries": 10
   }
 }

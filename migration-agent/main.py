@@ -347,7 +347,7 @@ class InformaticaMigrationOrchestrator:
             
             # Post-processing
             self.build_knowledge_graph()
-            self.generate_sample_data()
+            # self.generate_sample_data()
             
             # Print summary
             self.print_execution_summary()

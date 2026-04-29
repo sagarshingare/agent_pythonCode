@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<POWERMART CREATION_DATE="2026-04-15" REPOSITORY_VERSION="186.93">
+
+  <REPOSITORY NAME="PROD_REPO" VERSION="186.93">
+    <FOLDER NAME="BFSI_ETL_PROD" OWNER="ETL_TEAM" SHARED="NOTSHARED">
+
+      <!-- ===================== SOURCE ===================== -->
+      <SOURCE NAME="SRC_CUSTOMER_TXN" DATABASETYPE="Oracle">
+        <SOURCEFIELD NAME="CUSTOMER_ID" DATATYPE="number" PRECISION="10"/>
+        <SOURCEFIELD NAME="ACCOUNT_ID" DATATYPE="number" PRECISION="10"/>
+        <SOURCEFIELD NAME="TXN_AMOUNT" DATATYPE="number" PRECISION="12,2"/>
+        <SOURCEFIELD NAME="TXN_DATE" DATATYPE="date"/>
+        <SOURCEFIELD NAME="LAST_UPDATED_TS" DATATYPE="date"/>
+      </SOURCE>
+
+      <!-- ===================== TARGET ===================== -->
+      <TARGET NAME="TGT_CUSTOMER_AGG" DATABASETYPE="Oracle">
+        <TARGETFIELD NAME="CUSTOMER_ID" DATATYPE="number"/>
+        <TARGETFIELD NAME="TOTAL_TXN" DATATYPE="number"/>
+        <TARGETFIELD NAME="AVG_TXN" DATATYPE="number"/>
+        <TARGETFIELD NAME="MAX_TXN" DATATYPE="number"/>
+        <TARGETFIELD NAME="LOAD_DT" DATATYPE="date"/>
+      </TARGET>
+
+      <!-- ===================== MAPPING ===================== -->
+      <MAPPING NAME="M_BFSI_CUSTOMER_360">
+
+        <!-- Source Qualifier with Incremental Logic -->
+        <TRANSFORMATION NAME="SQ_CUSTOMER" TYPE="Source Qualifier">
+          <TABLEATTRIBUTE NAME="Sql Query"
+            VALUE="SELECT * FROM SRC_CUSTOMER_TXN
+                   WHERE LAST_UPDATED_TS > $$LAST_SUCCESSFUL_RUN"/>
+        </TRANSFORMATION>
+
+        <!-- Expression Transformation -->
+        <TRANSFORMATION NAME="EXP_DERIVED_FIELDS" TYPE="Expression">
+          <TRANSFORMFIELD NAME="TXN_FLAG"
+            EXPRESSION="IIF(TXN_AMOUNT > 100000, 'HIGH', 'NORMAL')"/>
+          <TRANSFORMFIELD NAME="VALID_TXN"
+            EXPRESSION="IIF(ISNULL(TXN_AMOUNT), 0, 1)"/>
+        </TRANSFORMATION>
+
+        <!-- Lookup Transformation (Dimension Lookup) -->
+        <TRANSFORMATION NAME="LKP_CUSTOMER_DIM" TYPE="Lookup">
+          <TABLEATTRIBUTE NAME="Lookup condition"
+            VALUE="SRC.CUSTOMER_ID = DIM.CUSTOMER_ID"/>
+        </TRANSFORMATION>
+
+        <!-- Router Transformation -->
+        <TRANSFORMATION NAME="RTR_VALIDATION" TYPE="Router">
+          <GROUP NAME="VALID_RECORDS" CONDITION="VALID_TXN = 1"/>
+          <GROUP NAME="REJECT_RECORDS" CONDITION="VALID_TXN = 0"/>
+        </TRANSFORMATION>
+
+        <!-- Aggregator -->
+        <TRANSFORMATION NAME="AGG_TXN" TYPE="Aggregator">
+          <TRANSFORMFIELD NAME="TOTAL_TXN"
+            EXPRESSION="SUM(TXN_AMOUNT)"/>
+          <TRANSFORMFIELD NAME="AVG_TXN"
+            EXPRESSION="AVG(TXN_AMOUNT)"/>
+          <TRANSFORMFIELD NAME="MAX_TXN"
+            EXPRESSION="MAX(TXN_AMOUNT)"/>
+        </TRANSFORMATION>
+
+        <!-- Joiner -->
+        <TRANSFORMATION NAME="JNR_CUSTOMER" TYPE="Joiner">
+          <TABLEATTRIBUTE NAME="Join Type" VALUE="Master Outer"/>
+        </TRANSFORMATION>
+
+        <!-- Update Strategy (SCD Type 2 logic) -->
+        <TRANSFORMATION NAME="UPD_SCD2" TYPE="Update Strategy">
+          <TRANSFORMFIELD NAME="DD_FLAG"
+            EXPRESSION="IIF(ISNULL(LKP_CUSTOMER_DIM.CUSTOMER_ID),
+                        DD_INSERT,
+                        IIF(EXP_DERIVED_FIELDS.TXN_AMOUNT != LKP_CUSTOMER_DIM.TXN_AMOUNT,
+                            DD_UPDATE,
+                            DD_REJECT))"/>
+        </TRANSFORMATION>
+
+        <!-- Target Load -->
+        <INSTANCE NAME="TGT_CUSTOMER_AGG_INSTANCE"
+                  TRANSFORMATION_NAME="TGT_CUSTOMER_AGG"/>
+
+        <!-- ===================== CONNECTORS ===================== -->
+        <CONNECTOR FROMINSTANCE="SQ_CUSTOMER"
+                   TOINSTANCE="EXP_DERIVED_FIELDS"/>
+        <CONNECTOR FROMINSTANCE="EXP_DERIVED_FIELDS"
+                   TOINSTANCE="RTR_VALIDATION"/>
+        <CONNECTOR FROMINSTANCE="RTR_VALIDATION"
+                   TOINSTANCE="AGG_TXN"/>
+        <CONNECTOR FROMINSTANCE="AGG_TXN"
+                   TOINSTANCE="UPD_SCD2"/>
+        <CONNECTOR FROMINSTANCE="UPD_SCD2"
+                   TOINSTANCE="TGT_CUSTOMER_AGG_INSTANCE"/>
+
+      </MAPPING>
+
+      <!-- ===================== SESSION ===================== -->
+      <SESSION NAME="S_BFSI_CUSTOMER_360" MAPPINGNAME="M_BFSI_CUSTOMER_360">
+
+        <SESSIONEXTENSION TYPE="Relational Reader">
+          <ATTRIBUTE NAME="Partitioning Option" VALUE="Hash Auto-Keys"/>
+        </SESSIONEXTENSION>
+
+        <SESSIONEXTENSION TYPE="Relational Writer">
+          <ATTRIBUTE NAME="Bulk Mode" VALUE="ON"/>
+        </SESSIONEXTENSION>
+
+        <CONFIGREFERENCE NAME="DEFAULT_CONFIG"/>
+
+      </SESSION>
+
+      <!-- ===================== WORKFLOW ===================== -->
+      <WORKFLOW NAME="WF_BFSI_CUSTOMER_360">
+        <TASKINSTANCE NAME="S_BFSI_CUSTOMER_360_TASK"
+                      TASKTYPE="Session"
+                      TASKNAME="S_BFSI_CUSTOMER_360"/>
+      </WORKFLOW>
+
+    </FOLDER>
+  </REPOSITORY>
+</POWERMART>
