@@ -1,0 +1,226 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d5" for="edge" attr.name="metadata" attr.type="string"/>
+<key id="d4" for="edge" attr.name="field_mapping" attr.type="string"/>
+<key id="d3" for="node" attr.name="properties" attr.type="string"/>
+<key id="d2" for="node" attr.name="description" attr.type="string"/>
+<key id="d1" for="node" attr.name="name" attr.type="string"/>
+<key id="d0" for="node" attr.name="type" attr.type="string"/>
+<graph edgedefault="directed"><node id="source_U0287D01">
+  <data key="d0">source</data>
+  <data key="d1">U0287D01</data>
+  <data key="d2">Source system</data>
+  <data key="d3">{}</data>
+</node>
+<node id="exp_Build_Message">
+  <data key="d0">Expression</data>
+  <data key="d1">exp_Build_Message</data>
+  <data key="d2">This transformation sets the mapping variables MAP_SUBJECT and MAP_MESSAGE using the counters and descriptions set in the previous expression transformation.</data>
+  <data key="d3">{'input_fields': ['COUNTER_DESCRIPTION_1', 'COUNTER_1', 'PP_NUM', 'PP_END_YEAR'], 'output_fields': ['o_SUBJECT', 'o_MESSAGE']}</data>
+</node>
+<node id="fil_Detail">
+  <data key="d0">Filter</data>
+  <data key="d1">fil_Detail</data>
+  <data key="d2">Filters Detail Records</data>
+  <data key="d3">{'input_fields': ['SSN', 'RECORD_TYPE_FLAG', 'RECORD_TYPE', 'DETAIL_CONSTANT'], 'output_fields': ['SSN', 'RECORD_TYPE_FLAG', 'RECORD_TYPE', 'DETAIL_CONSTANT']}</data>
+</node>
+<node id="exp_Initial">
+  <data key="d0">Expression</data>
+  <data key="d1">exp_Initial</data>
+  <data key="d2"></data>
+  <data key="d3">{'input_fields': ['SSN', 'NAME', 'CURRENT_ACCT', 'CURRENT_ORG', 'FLSA_STATUS', 'COMP_TIME_CUR_BAL', 'COMP_TIME_YEAR_EARNED', 'PP_END_DATE', 'DAILY_DATE_EARNED', 'COMP_TIME_RATE', 'COMP_TIME_HOURS', 'COMP_TIME_UNDEF'], 'output_fields': ['SSN', 'NAME', 'CURRENT_ACCT', 'CURRENT_ORG', 'FLSA_STATUS', 'COMP_TIME_CUR_BAL', 'COMP_TIME_YEAR_EARNED', 'PP_END_DATE', 'DAILY_DATE_EARNED', 'COMP_TIME_RATE', 'COMP_TIME_HOURS', 'COMP_TIME_UNDEF', 'o_CURR_PP_FLAG', 'o_VALID_RECORD_FLAG']}</data>
+</node>
+<node id="agg_ALL_RECORDS">
+  <data key="d0">Aggregator</data>
+  <data key="d1">agg_ALL_RECORDS</data>
+  <data key="d2">Performs a count on all Detail Records.</data>
+  <data key="d3">{'input_fields': ['SSN', 'RECORD_TYPE_FLAG', 'RECORD_TYPE'], 'output_fields': ['SSN', 'RECORD_TYPE_FLAG', 'RECORD_TYPE', 'o_DETAIL_RECORD_COUNT']}</data>
+</node>
+<node id="exp_Detail_Count">
+  <data key="d0">Expression</data>
+  <data key="d1">exp_Detail_Count</data>
+  <data key="d2"></data>
+  <data key="d3">{'input_fields': ['DETAIL_RECORD_COUNT'], 'output_fields': ['DETAIL_RECORD_COUNT', 'o_CURR_PP_FLAG']}</data>
+</node>
+<node id="exp_Counters">
+  <data key="d0">Expression</data>
+  <data key="d1">exp_Counters</data>
+  <data key="d2">Compiles all the counter values.</data>
+  <data key="d3">{'input_fields': ['DETAIL_RECORD_COUNT', 'lkp_PP_NUM', 'lkp_PP_END_YEAR'], 'output_fields': ['o_COUNTER_DESCRIPTION_1', 'DETAIL_RECORD_COUNT', 'lkp_PP_NUM', 'lkp_PP_END_YEAR']}</data>
+</node>
+<node id="exp_Final">
+  <data key="d0">Expression</data>
+  <data key="d1">exp_Final</data>
+  <data key="d2"></data>
+  <data key="d3">{'input_fields': ['PAY_PERIOD', 'MAP_PP_YEAR_NUM', 'PP_END_YEAR', 'PP_NUM'], 'output_fields': ['PAY_PERIOD']}</data>
+</node>
+<node id="SQ_U0287D01">
+  <data key="d0">Source Qualifier</data>
+  <data key="d1">SQ_U0287D01</data>
+  <data key="d2"></data>
+  <data key="d3">{'input_fields': ['SSN', 'NAME', 'CURRENT_ACCT', 'CURRENT_ORG', 'FLSA_STATUS', 'COMP_TIME_CUR_BAL', 'COMP_TIME_YEAR_EARNED', 'PP_END_DATE', 'DAILY_DATE_EARNED', 'COMP_TIME_RATE', 'COMP_TIME_HOURS', 'COMP_TIME_UNDEF'], 'output_fields': ['SSN', 'NAME', 'CURRENT_ACCT', 'CURRENT_ORG', 'FLSA_STATUS', 'COMP_TIME_CUR_BAL', 'COMP_TIME_YEAR_EARNED', 'PP_END_DATE', 'DAILY_DATE_EARNED', 'COMP_TIME_RATE', 'COMP_TIME_HOURS', 'COMP_TIME_UNDEF']}</data>
+</node>
+<node id="lkp_PAY_PERIOD">
+  <data key="d0">Lookup Procedure</data>
+  <data key="d1">lkp_PAY_PERIOD</data>
+  <data key="d2"></data>
+  <data key="d3">{'input_fields': ['in_CURR_PP_FLAG', 'PP_NUM', 'PP_END_YEAR', 'PP_START_DTE', 'PP_END_DTE', 'LV_NUM', 'LV_YEAR', 'PAY_DTE', 'CURR_PP_FLAG'], 'output_fields': ['PP_NUM', 'PP_END_YEAR', 'PP_START_DTE', 'PP_END_DTE', 'LV_NUM', 'LV_YEAR', 'PAY_DTE', 'CURR_PP_FLAG']}</data>
+</node>
+<node id="exp_Final_Message">
+  <data key="d0">Expression</data>
+  <data key="d1">exp_Final_Message</data>
+  <data key="d2"></data>
+  <data key="d3">{'input_fields': ['SUBJECT', 'MESSAGE'], 'output_fields': ['SUBJECT', 'MESSAGE']}</data>
+</node>
+<node id="target_COUNTER_TBL">
+  <data key="d0">target</data>
+  <data key="d1">COUNTER_TBL</data>
+  <data key="d2">Target system</data>
+  <data key="d3">{}</data>
+</node>
+<node id="target_COMPTIME_MESSAGE_FILE">
+  <data key="d0">target</data>
+  <data key="d1">COMPTIME_MESSAGE_FILE</data>
+  <data key="d2">Target system</data>
+  <data key="d3">{}</data>
+</node>
+<node id="COUNTER_TBL"/>
+<node id="COMPTIME_MESSAGE_FILE"/>
+<node id="U0287D01"/>
+<node id="exp_Convert">
+  <data key="d0">Expression</data>
+  <data key="d1">exp_Convert</data>
+  <data key="d2"></data>
+  <data key="d3">{'input_fields': ['SSN', 'NAME', 'CURRENT_ACCT', 'CURRENT_ORG', 'FLSA_STATUS', 'COMP_TIME_CUR_BAL', 'COMP_TIME_YEAR_EARNED', 'PP_END_DATE', 'DAILY_DATE_EARNED', 'COMP_TIME_RATE', 'COMP_TIME_HOURS', 'COMP_TIME_UNDEF', 'lkp_PP_NUM', 'lkp_PP_END_YEAR'], 'output_fields': ['SSN', 'NAME', 'CURRENT_ACCT', 'CURRENT_ORG', 'FLSA_STATUS', 'COMP_TIME_CUR_BAL', 'COMP_TIME_YEAR_EARNED', 'o_PP_END_DATE', 'o_DAILY_DATE_EARNED', 'COMP_TIME_RATE', 'COMP_TIME_HOURS', 'COMP_TIME_UNDEF', 'o_PP_END_YEAR', 'o_PP_NUM', 'o_PP_YEAR_NUM']}</data>
+</node>
+<node id="fil_Valid_Records">
+  <data key="d0">Filter</data>
+  <data key="d1">fil_Valid_Records</data>
+  <data key="d2"></data>
+  <data key="d3">{'input_fields': ['SSN', 'NAME', 'CURRENT_ACCT', 'CURRENT_ORG', 'FLSA_STATUS', 'COMP_TIME_CUR_BAL', 'COMP_TIME_YEAR_EARNED', 'PP_END_DATE', 'DAILY_DATE_EARNED', 'COMP_TIME_RATE', 'COMP_TIME_HOURS', 'COMP_TIME_UNDEF', 'CURR_PP_FLAG', 'VALID_RECORD_FLAG'], 'output_fields': ['SSN', 'NAME', 'CURRENT_ACCT', 'CURRENT_ORG', 'FLSA_STATUS', 'COMP_TIME_CUR_BAL', 'COMP_TIME_YEAR_EARNED', 'PP_END_DATE', 'DAILY_DATE_EARNED', 'COMP_TIME_RATE', 'COMP_TIME_HOURS', 'COMP_TIME_UNDEF', 'CURR_PP_FLAG', 'VALID_RECORD_FLAG']}</data>
+</node>
+<node id="target_COMP_TIME_DAILY_TBL">
+  <data key="d0">target</data>
+  <data key="d1">COMP_TIME_DAILY_TBL</data>
+  <data key="d2">Target system</data>
+  <data key="d3">{}</data>
+</node>
+<node id="COMP_TIME_DAILY_TBL"/>
+<node id="source_PAY_PERIOD">
+  <data key="d0">source</data>
+  <data key="d1">PAY_PERIOD</data>
+  <data key="d2">Source system</data>
+  <data key="d3">{}</data>
+</node>
+<node id="SQ_PAY_PERIOD">
+  <data key="d0">Source Qualifier</data>
+  <data key="d1">SQ_PAY_PERIOD</data>
+  <data key="d2"></data>
+  <data key="d3">{'input_fields': ['PP_NUM', 'PP_END_YEAR', 'PP_START_DTE', 'PP_END_DTE', 'LV_NUM', 'LV_YEAR', 'PAY_DTE', 'CURR_PP_FLAG'], 'output_fields': ['PP_NUM', 'PP_END_YEAR', 'PP_START_DTE', 'PP_END_DTE', 'LV_NUM', 'LV_YEAR', 'PAY_DTE', 'CURR_PP_FLAG']}</data>
+</node>
+<node id="exp_Build_Pay_Period">
+  <data key="d0">Expression</data>
+  <data key="d1">exp_Build_Pay_Period</data>
+  <data key="d2">This transformation combines the Current Pay Period and Current year into one string.</data>
+  <data key="d3">{'input_fields': ['PP_NUM', 'PP_END_YEAR'], 'output_fields': ['o_PAY_PERIOD', 'o_MAP_PP_YEAR_NUM', 'o_PP_END_YEAR', 'o_PP_NUM']}</data>
+</node>
+<node id="target_COMP_TIME_DATE_FILE">
+  <data key="d0">target</data>
+  <data key="d1">COMP_TIME_DATE_FILE</data>
+  <data key="d2">Target system</data>
+  <data key="d3">{}</data>
+</node>
+<node id="COMP_TIME_DATE_FILE"/>
+<node id="PAY_PERIOD"/>
+<edge source="exp_Build_Message" target="exp_Final_Message">
+  <data key="d4">{'o_SUBJECT': 'SUBJECT'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="fil_Detail" target="agg_ALL_RECORDS">
+  <data key="d4">{'RECORD_TYPE': 'RECORD_TYPE'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="exp_Initial" target="fil_Detail">
+  <data key="d4">{'o_RECORD_TYPE_FLAG': 'RECORD_TYPE_FLAG'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="exp_Initial" target="fil_Valid_Records">
+  <data key="d4">{'o_VALID_RECORD_FLAG': 'VALID_RECORD_FLAG'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="agg_ALL_RECORDS" target="exp_Detail_Count">
+  <data key="d4">{'o_DETAIL_RECORD_COUNT': 'DETAIL_RECORD_COUNT'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="exp_Detail_Count" target="exp_Counters">
+  <data key="d4">{'DETAIL_RECORD_COUNT': 'DETAIL_RECORD_COUNT'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="exp_Detail_Count" target="lkp_PAY_PERIOD">
+  <data key="d4">{'o_CURR_PP_FLAG': 'in_CURR_PP_FLAG'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="exp_Counters" target="exp_Build_Message">
+  <data key="d4">{'lkp_PP_END_YEAR': 'PP_END_YEAR'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="exp_Counters" target="exp_Final">
+  <data key="d4">{'DETAIL_RECORD_COUNT': 'COUNTER_VALUE'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="exp_Final" target="COUNTER_TBL">
+  <data key="d4">{'o_PROCESS_NAME': 'PROCESS_NAME'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="exp_Final" target="COMP_TIME_DAILY_TBL">
+  <data key="d4">{'DAILY_DATE_EARNED': 'DAILY_DATE_EARNED'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="exp_Final" target="COMP_TIME_DATE_FILE">
+  <data key="d4">{'PAY_PERIOD': 'PAY_PERIOD'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="SQ_U0287D01" target="exp_Initial">
+  <data key="d4">{'COMP_TIME_UNDEF': 'COMP_TIME_UNDEF'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="lkp_PAY_PERIOD" target="exp_Counters">
+  <data key="d4">{'PP_END_YEAR': 'lkp_PP_END_YEAR'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="lkp_PAY_PERIOD" target="exp_Convert">
+  <data key="d4">{'PP_END_YEAR': 'lkp_PP_END_YEAR'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="exp_Final_Message" target="COMPTIME_MESSAGE_FILE">
+  <data key="d4">{'MESSAGE': 'MESSAGE'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="U0287D01" target="SQ_U0287D01">
+  <data key="d4">{'COMP_TIME_UNDEF': 'COMP_TIME_UNDEF'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="exp_Convert" target="exp_Final">
+  <data key="d4">{'COMP_TIME_UNDEF': 'COMP_TIME_UNDEF'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="fil_Valid_Records" target="lkp_PAY_PERIOD">
+  <data key="d4">{'CURR_PP_FLAG': 'in_CURR_PP_FLAG'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="fil_Valid_Records" target="exp_Convert">
+  <data key="d4">{'COMP_TIME_CUR_BAL': 'COMP_TIME_CUR_BAL'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="SQ_PAY_PERIOD" target="exp_Build_Pay_Period">
+  <data key="d4">{'PP_END_YEAR': 'PP_END_YEAR'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="exp_Build_Pay_Period" target="exp_Final">
+  <data key="d4">{'o_PP_NUM': 'PP_NUM'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="PAY_PERIOD" target="SQ_PAY_PERIOD">
+  <data key="d4">{'CURR_PP_FLAG': 'CURR_PP_FLAG'}</data>
+  <data key="d5">{}</data>
+</edge>
+</graph></graphml>

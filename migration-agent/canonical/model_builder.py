@@ -240,6 +240,40 @@ class CanonicalModelBuilder:
             step.lookup_table = attrs.get('Lookup table name')
             step.lookup_condition = attrs.get('Lookup condition')
         
+        # Extract Router groups
+        if trans_data.get('type') == 'Router':
+            groups = trans_data.get('groups', [])
+            step.additional_params['router_groups'] = []
+            for group in groups:
+                step.additional_params['router_groups'].append({
+                    'name': group.get('name', ''),
+                    'expression': group.get('expression', ''),
+                    'type': group.get('type', '')
+                })
+        
+        # Extract Joiner info
+        if trans_data.get('type') == 'Joiner':
+            attrs = trans_data.get('attributes', {})
+            step.additional_params['join_type'] = attrs.get('Join Type', 'Normal')
+            step.additional_params['join_condition'] = attrs.get('Join Condition', '')
+            step.additional_params['master_sort_order'] = attrs.get('Master Sort Order', '')
+            step.additional_params['detail_sort_order'] = attrs.get('Detail Sort Order', '')
+        
+        # Extract Sequence info
+        if trans_data.get('type') == 'Sequence':
+            attrs = trans_data.get('attributes', {})
+            step.additional_params['start_value'] = attrs.get('Start Value', '1')
+            step.additional_params['increment_by'] = attrs.get('Increment By', '1')
+            step.additional_params['end_value'] = attrs.get('End Value', '999999999')
+            step.additional_params['current_value'] = attrs.get('Current Value', '1')
+            step.additional_params['cycle'] = attrs.get('Cycle', 'NO')
+            step.additional_params['reset'] = attrs.get('Reset', 'NO')
+        
+        # Extract Update Strategy info
+        if trans_data.get('type') == 'Update Strategy':
+            attrs = trans_data.get('attributes', {})
+            step.additional_params['update_strategy_expression'] = attrs.get('Update Strategy Expression', '')
+        
         return step
     
     def _build_dependencies(self, canonical: CanonicalMapping) -> Dict[str, List[str]]:

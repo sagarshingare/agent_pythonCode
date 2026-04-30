@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d1" for="edge" attr.name="metadata" attr.type="string"/>
+<key id="d0" for="edge" attr.name="field_mapping" attr.type="string"/>
+<graph edgedefault="directed"><node id="SQ_Customer_Data"/>
+<node id="EXP_Customer_Processing"/>
+<node id="FLT_Active_Customers"/>
+<node id="AGG_Customer_Summary"/>
+<node id="LKP_Customer_Status"/>
+<node id="JNR_Customer_Orders"/>
+<node id="RTR_Customer_Segments"/>
+<node id="SEQ_Customer_ID"/>
+<node id="UPDSTRAT_Customer_Update"/>
+<node id="T_Customer_Output"/>
+<node id="T_Customer_Summary"/>
+<node id="T_Customer_Premium"/>
+<node id="T_Customer_Standard"/>
+<edge source="SQ_Customer_Data" target="EXP_Customer_Processing">
+  <data key="d0">{'COUNTRY': 'COUNTRY'}</data>
+  <data key="d1">{}</data>
+</edge>
+<edge source="EXP_Customer_Processing" target="FLT_Active_Customers">
+  <data key="d0">{'COUNTRY': 'COUNTRY'}</data>
+  <data key="d1">{}</data>
+</edge>
+<edge source="FLT_Active_Customers" target="AGG_Customer_Summary">
+  <data key="d0">{'COUNTRY': 'COUNTRY'}</data>
+  <data key="d1">{}</data>
+</edge>
+<edge source="FLT_Active_Customers" target="LKP_Customer_Status">
+  <data key="d0">{'STATUS': 'STATUS'}</data>
+  <data key="d1">{}</data>
+</edge>
+<edge source="FLT_Active_Customers" target="JNR_Customer_Orders">
+  <data key="d0">{'FULL_NAME': 'FULL_NAME'}</data>
+  <data key="d1">{}</data>
+</edge>
+<edge source="FLT_Active_Customers" target="RTR_Customer_Segments">
+  <data key="d0">{'CUSTOMER_SEGMENT': 'CUSTOMER_SEGMENT'}</data>
+  <data key="d1">{}</data>
+</edge>
+<edge source="AGG_Customer_Summary" target="T_Customer_Summary">
+  <data key="d0">{'CUSTOMER_COUNT': 'CUSTOMER_COUNT'}</data>
+  <data key="d1">{}</data>
+</edge>
+<edge source="RTR_Customer_Segments" target="SEQ_Customer_ID">
+  <data key="d0">{'CUSTOMER_SEGMENT': 'CUSTOMER_SEGMENT'}</data>
+  <data key="d1">{}</data>
+</edge>
+<edge source="RTR_Customer_Segments" target="T_Customer_Premium">
+  <data key="d0">{'ACCOUNT_BALANCE': 'ACCOUNT_BALANCE'}</data>
+  <data key="d1">{}</data>
+</edge>
+<edge source="RTR_Customer_Segments" target="T_Customer_Standard">
+  <data key="d0">{'ACCOUNT_BALANCE': 'ACCOUNT_BALANCE'}</data>
+  <data key="d1">{}</data>
+</edge>
+<edge source="SEQ_Customer_ID" target="UPDSTRAT_Customer_Update">
+  <data key="d0">{'SURROGATE_KEY': 'SURROGATE_KEY'}</data>
+  <data key="d1">{}</data>
+</edge>
+<edge source="UPDSTRAT_Customer_Update" target="T_Customer_Output">
+  <data key="d0">{'SURROGATE_KEY': 'SURROGATE_KEY'}</data>
+  <data key="d1">{}</data>
+</edge>
+</graph></graphml>

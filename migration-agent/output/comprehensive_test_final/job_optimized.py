@@ -36,8 +36,8 @@ def main():
     spark = setup_spark_session()
     
     # Execute 1 mapping(s)
-    # Mapping: M_BFSI_CUSTOMER_360
-    # MBfsiCustomer360(spark).execute()
+    # Mapping: m_comprehensive_poc
+    # MComprehensivePoc(spark).execute()
 
     logger.info("Job completed successfully")
     spark.stop()
@@ -46,5 +46,5 @@ if __name__ == "__main__":
     main()
 # Caching Strategy for Large Datasets
 
-# Consider caching intermediate results in M_BFSI_CUSTOMER_360
+# Consider caching intermediate results in m_comprehensive_poc
 # df_intermediate.cache()

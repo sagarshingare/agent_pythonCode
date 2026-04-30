@@ -43,6 +43,11 @@ class InformaticaMigrationOrchestrator:
         self.execution_results = {}
         self.context = AgentContext()
         
+        # Extract config values
+        self.output_dir = self.config.get('output_dir', 'output')
+        self.data_dir = self.config.get('data_dir', 'data')
+        self.csv_input = self.config.get('csv_input', 'data/generated_input.csv')
+        
         # Initialize RAG systems
         self.knowledge_base = KnowledgeBase()
         self.memory_store = MemoryStore()
@@ -80,6 +85,7 @@ class InformaticaMigrationOrchestrator:
             'xml_path': xml_path,
             'output_dir': self.output_dir,
             'data_dir': self.data_dir,
+            'csv_input': self.csv_input,
             'enable_data_generation': True,
             'start_time': datetime.now().isoformat(),
         }
@@ -375,6 +381,12 @@ def main():
         help='Path to Informatica XML export file'
     )
     parser.add_argument(
+        '--csv',
+        type=str,
+        default='data/generated_input.csv',
+        help='Path to input CSV file for data generation'
+    )
+    parser.add_argument(
         '--output',
         type=str,
         default='output',
@@ -392,6 +404,7 @@ def main():
     config = {
         'output_dir': args.output,
         'data_dir': args.data,
+        'csv_input': args.csv,
     }
     
     orchestrator = InformaticaMigrationOrchestrator(config)

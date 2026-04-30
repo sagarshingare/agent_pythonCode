@@ -1,0 +1,240 @@
+{
+  "start_time": "2026-04-30T09:13:27.049756",
+  "end_time": "2026-04-30T09:13:27.107409",
+  "agents": {
+    "planner": {
+      "agent_name": "PlannerAgent",
+      "status": "COMPLETED",
+      "output": {
+        "execution_plan": [
+          {
+            "step": 1,
+            "agent": "SpecAgent",
+            "description": "Parse Informatica XML export -> JSON -> Canonical Model",
+            "inputs": [
+              "xml_data"
+            ],
+            "outputs": [
+              "canonical_models",
+              "json_data"
+            ],
+            "timeout": 120,
+            "optional": false,
+            "retry": 3
+          },
+          {
+            "step": 2,
+            "agent": "CodeGenAgent",
+            "description": "Generate PySpark code from canonical model",
+            "inputs": [
+              "canonical_models"
+            ],
+            "outputs": [
+              "generated_code"
+            ],
+            "timeout": 180,
+            "optional": false,
+            "retry": 2
+          },
+          {
+            "step": 3,
+            "agent": "ValidationAgent",
+            "description": "Generate SQL validation queries (row counts, hashes, EXCEPT)",
+            "inputs": [
+              "canonical_models"
+            ],
+            "outputs": [
+              "validation_queries"
+            ],
+            "timeout": 120,
+            "optional": false,
+            "retry": 2
+          },
+          {
+            "step": 4,
+            "agent": "OptimizationAgent",
+            "description": "Apply performance optimizations (repartition, cache, broadcast)",
+            "inputs": [
+              "generated_code",
+              "canonical_models"
+            ],
+            "outputs": [
+              "optimized_code"
+            ],
+            "timeout": 120,
+            "optional": true,
+            "retry": 1
+          },
+          {
+            "step": 5,
+            "agent": "OrchestrationAgent",
+            "description": "Generate Airflow DAG for job orchestration",
+            "inputs": [
+              "canonical_models",
+              "generated_code"
+            ],
+            "outputs": [
+              "airflow_dag"
+            ],
+            "timeout": 120,
+            "optional": true,
+            "retry": 1
+          },
+          {
+            "step": 6,
+            "agent": "DocumentationAgent",
+            "description": "Generate comprehensive documentation from XML and code",
+            "inputs": [
+              "canonical_models",
+              "generated_code"
+            ],
+            "outputs": [
+              "documentation"
+            ],
+            "timeout": 120,
+            "optional": true,
+            "retry": 1
+          },
+          {
+            "step": 7,
+            "agent": "DataGenerationAgent",
+            "description": "Generate sample input and output datasets",
+            "inputs": [
+              "canonical_models"
+            ],
+            "outputs": [
+              "input_dataset",
+              "output_dataset"
+            ],
+            "timeout": 120,
+            "optional": true,
+            "retry": 1
+          }
+        ],
+        "total_steps": 7,
+        "agents_to_execute": [
+          "SpecAgent",
+          "CodeGenAgent",
+          "ValidationAgent",
+          "OptimizationAgent",
+          "OrchestrationAgent",
+          "DocumentationAgent",
+          "DataGenerationAgent"
+        ]
+      },
+      "error": null,
+      "execution_time_ms": 0
+    },
+    "spec": {
+      "agent_name": "SpecAgent",
+      "status": "COMPLETED",
+      "output": {
+        "xml_data_summary": {
+          "sources": 1,
+          "targets": 4,
+          "mappings": 1
+        },
+        "canonical_model_summary": {
+          "total_mappings": 1,
+          "mappings": [
+            "m_comprehensive_poc"
+          ],
+          "total_sources": 1,
+          "total_targets": 4,
+          "sources": [
+            "CUSTOMER_DATA"
+          ],
+          "targets": [
+            "T_Customer_Output",
+            "T_Customer_Summary",
+            "T_Customer_Premium",
+            "T_Customer_Standard"
+          ]
+        },
+        "mappings": [
+          "m_comprehensive_poc"
+        ],
+        "json_file": "output/comprehensive_test_v3/informatica_export.json"
+      },
+      "error": null,
+      "execution_time_ms": 2
+    },
+    "codegen": {
+      "agent_name": "CodeGenAgent",
+      "status": "COMPLETED",
+      "output": {
+        "generated_files": [
+          "output/comprehensive_test_v3/pyspark/m_comprehensive_poc.py",
+          "output/comprehensive_test_v3/pyspark/main_job.py"
+        ],
+        "main_job_file": "output/comprehensive_test_v3/pyspark/main_job.py",
+        "individual_mapping_files": [
+          "output/comprehensive_test_v3/pyspark/m_comprehensive_poc.py"
+        ],
+        "total_lines": 71
+      },
+      "error": null,
+      "execution_time_ms": 0
+    },
+    "validation": {
+      "agent_name": "ValidationAgent",
+      "status": "COMPLETED",
+      "output": {
+        "validation_file": "output/comprehensive_test_v3/sql/validation.sql",
+        "total_queries": 1,
+        "query_types": [
+          "row_count",
+          "except",
+          "hash"
+        ]
+      },
+      "error": null,
+      "execution_time_ms": 0
+    },
+    "optimization": {
+      "agent_name": "OptimizationAgent",
+      "status": "COMPLETED",
+      "output": {
+        "optimized_file": "output/comprehensive_test_v3/job_optimized.py",
+        "optimizations_applied": [
+          "repartitioning",
+          "broadcast_joins",
+          "caching",
+          "adaptive_query_execution"
+        ]
+      },
+      "error": null,
+      "execution_time_ms": 0
+    },
+    "orchestration": {
+      "agent_name": "OrchestrationAgent",
+      "status": "COMPLETED",
+      "output": {
+        "dag_file": "output/comprehensive_test_v3/dags/informatica_migration_dag.py",
+        "mappings_count": 1,
+        "dag_id": "informatica_migration_dag"
+      },
+      "error": null,
+      "execution_time_ms": 0
+    },
+    "documentation": {
+      "agent_name": "DocumentationAgent",
+      "status": "COMPLETED",
+      "output": {
+        "documentation_files": [
+          "output/comprehensive_test_v3/docs/m_comprehensive_poc_doc.md",
+          "output/comprehensive_test_v3/docs/README.md"
+        ],
+        "index_file": "output/comprehensive_test_v3/docs/README.md",
+        "total_mappings_documented": 1
+      },
+      "error": null,
+      "execution_time_ms": 0
+    }
+  },
+  "outputs": {
+    "canonical_models": 1,
+    "generated_code_lines": 33,
+    "validation_queries": 10
+  }
+}

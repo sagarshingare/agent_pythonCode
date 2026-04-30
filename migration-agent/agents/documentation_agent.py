@@ -37,7 +37,7 @@ class DocumentationAgent(BaseAgent):
                 all_docs.append(doc)
                 
                 # Save individual documentation
-                output_dir = context.metadata.get('output_dir', 'output/docs')
+                output_dir = os.path.join(context.metadata.get('output_dir', 'output'), 'docs')
                 ensure_dir(output_dir)
                 doc_file = os.path.join(
                     output_dir,
@@ -50,7 +50,7 @@ class DocumentationAgent(BaseAgent):
             index_doc = self._generate_index_documentation(context.canonical_models, all_docs)
             
             # Save index
-            output_dir = context.metadata.get('output_dir', 'output/docs')
+            output_dir = os.path.join(context.metadata.get('output_dir', 'output'), 'docs')
             index_file = os.path.join(output_dir, 'README.md')
             save_text(index_doc, index_file)
             output_files.append(index_file)

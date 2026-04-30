@@ -38,7 +38,7 @@ class ValidationAgent(BaseAgent):
             all_queries = '\n\n'.join(validation_queries)
             
             # Save to file
-            output_dir = context.metadata.get('output_dir', 'output/sql')
+            output_dir = os.path.join(context.metadata.get('output_dir', 'output'), 'sql')
             ensure_dir(output_dir)
             validation_file = os.path.join(output_dir, 'validation.sql')
             save_text(all_queries, validation_file)

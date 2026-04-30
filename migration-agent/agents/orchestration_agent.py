@@ -28,7 +28,7 @@ class OrchestrationAgent(BaseAgent):
             context.airflow_dag = dag_code
             
             # Save DAG file
-            output_dir = context.metadata.get('output_dir', 'output/dags')
+            output_dir = os.path.join(context.metadata.get('output_dir', 'output'), 'dags')
             ensure_dir(output_dir)
             dag_file = os.path.join(output_dir, 'informatica_migration_dag.py')
             save_text(dag_code, dag_file)

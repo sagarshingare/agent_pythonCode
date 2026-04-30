@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d5" for="edge" attr.name="metadata" attr.type="string"/>
+<key id="d4" for="edge" attr.name="field_mapping" attr.type="string"/>
+<key id="d3" for="node" attr.name="properties" attr.type="string"/>
+<key id="d2" for="node" attr.name="description" attr.type="string"/>
+<key id="d1" for="node" attr.name="name" attr.type="string"/>
+<key id="d0" for="node" attr.name="type" attr.type="string"/>
+<graph edgedefault="directed"><node id="SQ_Customer_Data">
+  <data key="d0">Source Qualifier</data>
+  <data key="d1">SQ_Customer_Data</data>
+  <data key="d2">Source Qualifier for customer data</data>
+  <data key="d3">{'input_fields': [], 'output_fields': []}</data>
+</node>
+<node id="EXP_Customer_Processing">
+  <data key="d0">Expression</data>
+  <data key="d1">EXP_Customer_Processing</data>
+  <data key="d2">Process customer data with expressions</data>
+  <data key="d3">{'input_fields': ['CUSTOMER_ID', 'FIRST_NAME', 'LAST_NAME', 'EMAIL', 'PHONE', 'REGISTRATION_DATE', 'ACCOUNT_BALANCE', 'STATUS', 'CITY', 'COUNTRY'], 'output_fields': ['CUSTOMER_ID', 'FULL_NAME', 'EMAIL', 'CLEAN_PHONE', 'REGISTRATION_DATE', 'ACCOUNT_BALANCE', 'STATUS', 'CUSTOMER_SEGMENT', 'CITY', 'COUNTRY']}</data>
+</node>
+<node id="FLT_Active_Customers">
+  <data key="d0">Filter</data>
+  <data key="d1">FLT_Active_Customers</data>
+  <data key="d2">Filter active customers only</data>
+  <data key="d3">{'input_fields': [], 'output_fields': []}</data>
+</node>
+<node id="AGG_Customer_Summary">
+  <data key="d0">Aggregator</data>
+  <data key="d1">AGG_Customer_Summary</data>
+  <data key="d2">Aggregate customer data by location</data>
+  <data key="d3">{'input_fields': [], 'output_fields': ['TOTAL_BALANCE', 'CUSTOMER_COUNT']}</data>
+</node>
+<node id="LKP_Customer_Status">
+  <data key="d0">Lookup Procedure</data>
+  <data key="d1">LKP_Customer_Status</data>
+  <data key="d2">Lookup customer status details</data>
+  <data key="d3">{'input_fields': ['CUSTOMER_ID', 'STATUS', 'LKP_CUSTOMER_ID', 'LKP_STATUS_DESC'], 'output_fields': ['LKP_CUSTOMER_ID', 'LKP_STATUS_DESC']}</data>
+</node>
+<node id="JNR_Customer_Orders">
+  <data key="d0">Joiner</data>
+  <data key="d1">JNR_Customer_Orders</data>
+  <data key="d2">Join customer with order data</data>
+  <data key="d3">{'input_fields': [], 'output_fields': []}</data>
+</node>
+<node id="RTR_Customer_Segments">
+  <data key="d0">Router</data>
+  <data key="d1">RTR_Customer_Segments</data>
+  <data key="d2">Route customers by segment</data>
+  <data key="d3">{'input_fields': [], 'output_fields': []}</data>
+</node>
+<node id="SEQ_Customer_ID">
+  <data key="d0">Sequence</data>
+  <data key="d1">SEQ_Customer_ID</data>
+  <data key="d2">Generate surrogate keys</data>
+  <data key="d3">{'input_fields': [], 'output_fields': ['SURROGATE_KEY']}</data>
+</node>
+<node id="UPDSTRAT_Customer_Update">
+  <data key="d0">Update Strategy</data>
+  <data key="d1">UPDSTRAT_Customer_Update</data>
+  <data key="d2">Define update strategy</data>
+  <data key="d3">{'input_fields': [], 'output_fields': []}</data>
+</node>
+<node id="T_Customer_Output"/>
+<node id="T_Customer_Summary"/>
+<node id="T_Customer_Premium"/>
+<node id="T_Customer_Standard"/>
+<edge source="SQ_Customer_Data" target="EXP_Customer_Processing">
+  <data key="d4">{'COUNTRY': 'COUNTRY'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="EXP_Customer_Processing" target="FLT_Active_Customers">
+  <data key="d4">{'COUNTRY': 'COUNTRY'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="FLT_Active_Customers" target="AGG_Customer_Summary">
+  <data key="d4">{'COUNTRY': 'COUNTRY'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="FLT_Active_Customers" target="LKP_Customer_Status">
+  <data key="d4">{'STATUS': 'STATUS'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="FLT_Active_Customers" target="JNR_Customer_Orders">
+  <data key="d4">{'FULL_NAME': 'FULL_NAME'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="FLT_Active_Customers" target="RTR_Customer_Segments">
+  <data key="d4">{'CUSTOMER_SEGMENT': 'CUSTOMER_SEGMENT'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="AGG_Customer_Summary" target="T_Customer_Summary">
+  <data key="d4">{'CUSTOMER_COUNT': 'CUSTOMER_COUNT'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="RTR_Customer_Segments" target="SEQ_Customer_ID">
+  <data key="d4">{'CUSTOMER_SEGMENT': 'CUSTOMER_SEGMENT'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="RTR_Customer_Segments" target="T_Customer_Premium">
+  <data key="d4">{'ACCOUNT_BALANCE': 'ACCOUNT_BALANCE'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="RTR_Customer_Segments" target="RTR_Customer_Segments">
+  <data key="d4">{'FULL_NAME': 'FULL_NAME'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="RTR_Customer_Segments" target="T_Customer_Standard">
+  <data key="d4">{'ACCOUNT_BALANCE': 'ACCOUNT_BALANCE'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="SEQ_Customer_ID" target="UPDSTRAT_Customer_Update">
+  <data key="d4">{'SURROGATE_KEY': 'SURROGATE_KEY'}</data>
+  <data key="d5">{}</data>
+</edge>
+<edge source="UPDSTRAT_Customer_Update" target="T_Customer_Output">
+  <data key="d4">{'SURROGATE_KEY': 'SURROGATE_KEY'}</data>
+  <data key="d5">{}</data>
+</edge>
+</graph></graphml>

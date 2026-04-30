@@ -158,20 +158,33 @@ class InformaticaXMLParser:
     def _parse_transformations(self, mapping_elem) -> Dict[str, Dict[str, Any]]:
         """Parse TRANSFORMATION elements within a mapping"""
         transformations = {}
-        for trans in mapping_elem.findall('TRANSFORMATION'):
-            trans_name = trans.get('NAME', '')
-            trans_type = trans.get('TYPE', '')
-            transformations[trans_name] = {
-                'name': trans_name,
-                'type': trans_type,
-                'description': trans.get('DESCRIPTION', ''),
-                'reusable': trans.get('REUSABLE', 'NO'),
-                'fields': self._parse_transform_fields(trans),
-                'attributes': self._parse_attributes(trans),
-                'sql_query': self._extract_sql_query(trans),
-                'expression_logic': self._extract_expression_logic(trans),
-                'filter_condition': self._extract_filter_condition(trans),
-            }
+        
+        # First, collect all transformations from the folder level
+        folder_transformations = {}
+        folder = self.root.find('.//FOLDER')
+        if folder is not None:
+            for trans in folder.findall('TRANSFORMATION'):
+                trans_name = trans.get('NAME', '')
+                trans_type = trans.get('TYPE', '')
+                folder_transformations[trans_name] = {
+                    'name': trans_name,
+                    'type': trans_type,
+                    'description': trans.get('DESCRIPTION', ''),
+                    'reusable': trans.get('REUSABLE', 'NO'),
+                    'fields': self._parse_transform_fields(trans),
+                    'attributes': self._parse_attributes(trans),
+                    'sql_query': self._extract_sql_query(trans),
+                    'expression_logic': self._extract_expression_logic(trans),
+                    'filter_condition': self._extract_filter_condition(trans),
+                    'groups': self._extract_router_groups(trans),
+                }
+        
+        # Then associate transformations with mapping instances
+        for instance in mapping_elem.findall('INSTANCE'):
+            trans_name = instance.get('TRANSFORMATION_NAME', '')
+            if trans_name in folder_transformations:
+                transformations[trans_name] = folder_transformations[trans_name]
+        
         return transformations
     
     def _parse_transformations_global(self) -> Dict[str, Dict[str, Any]]:
@@ -305,6 +318,18 @@ class InformaticaXMLParser:
                     'type': field.get('EXPRESSIONTYPE', ''),
                 })
         return expressions
+    
+    def _extract_router_groups(self, trans_elem) -> List[Dict[str, str]]:
+        """Extract router groups from Router transformation"""
+        groups = []
+        for group in trans_elem.findall('.//GROUP'):
+            groups.append({
+                'name': group.get('NAME', ''),
+                'expression': group.get('EXPRESSION', ''),
+                'type': group.get('TYPE', ''),
+                'order': group.get('ORDER', ''),
+            })
+        return groups
 
 
 def parse_informatica_xml(xml_path: str) -> Dict[str, Any]:

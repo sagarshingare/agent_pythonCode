@@ -1,6 +1,6 @@
 {
-  "start_time": "2026-04-30T03:24:14.634150",
-  "end_time": "2026-04-30T03:24:14.697515",
+  "start_time": "2026-04-30T09:15:00.631725",
+  "end_time": "2026-04-30T09:15:00.687193",
   "agents": {
     "planner": {
       "agent_name": "PlannerAgent",
@@ -131,44 +131,47 @@
       "output": {
         "xml_data_summary": {
           "sources": 1,
-          "targets": 1,
+          "targets": 4,
           "mappings": 1
         },
         "canonical_model_summary": {
           "total_mappings": 1,
           "mappings": [
-            "M_BFSI_CUSTOMER_360"
+            "m_comprehensive_poc"
           ],
           "total_sources": 1,
-          "total_targets": 1,
+          "total_targets": 4,
           "sources": [
-            "SRC_CUSTOMER_TXN"
+            "CUSTOMER_DATA"
           ],
           "targets": [
-            "TGT_CUSTOMER_AGG"
+            "T_Customer_Output",
+            "T_Customer_Summary",
+            "T_Customer_Premium",
+            "T_Customer_Standard"
           ]
         },
         "mappings": [
-          "M_BFSI_CUSTOMER_360"
+          "m_comprehensive_poc"
         ],
-        "json_file": "output2/informatica_export.json"
+        "json_file": "output/comprehensive_test_v4/informatica_export.json"
       },
       "error": null,
-      "execution_time_ms": 1
+      "execution_time_ms": 3
     },
     "codegen": {
       "agent_name": "CodeGenAgent",
       "status": "COMPLETED",
       "output": {
         "generated_files": [
-          "output2/m_bfsi_customer_360.py",
-          "output2/main_job.py"
+          "output/comprehensive_test_v4/pyspark/m_comprehensive_poc.py",
+          "output/comprehensive_test_v4/pyspark/main_job.py"
         ],
-        "main_job_file": "output2/main_job.py",
+        "main_job_file": "output/comprehensive_test_v4/pyspark/main_job.py",
         "individual_mapping_files": [
-          "output2/m_bfsi_customer_360.py"
+          "output/comprehensive_test_v4/pyspark/m_comprehensive_poc.py"
         ],
-        "total_lines": 46
+        "total_lines": 71
       },
       "error": null,
       "execution_time_ms": 0
@@ -177,7 +180,7 @@
       "agent_name": "ValidationAgent",
       "status": "COMPLETED",
       "output": {
-        "validation_file": "output2/validation.sql",
+        "validation_file": "output/comprehensive_test_v4/sql/validation.sql",
         "total_queries": 1,
         "query_types": [
           "row_count",
@@ -192,7 +195,7 @@
       "agent_name": "OptimizationAgent",
       "status": "COMPLETED",
       "output": {
-        "optimized_file": "output2/job_optimized.py",
+        "optimized_file": "output/comprehensive_test_v4/job_optimized.py",
         "optimizations_applied": [
           "repartitioning",
           "broadcast_joins",
@@ -207,7 +210,7 @@
       "agent_name": "OrchestrationAgent",
       "status": "COMPLETED",
       "output": {
-        "dag_file": "output2/informatica_migration_dag.py",
+        "dag_file": "output/comprehensive_test_v4/dags/informatica_migration_dag.py",
         "mappings_count": 1,
         "dag_id": "informatica_migration_dag"
       },
@@ -219,10 +222,10 @@
       "status": "COMPLETED",
       "output": {
         "documentation_files": [
-          "output2/m_bfsi_customer_360_doc.md",
-          "output2/README.md"
+          "output/comprehensive_test_v4/docs/m_comprehensive_poc_doc.md",
+          "output/comprehensive_test_v4/docs/README.md"
         ],
-        "index_file": "output2/README.md",
+        "index_file": "output/comprehensive_test_v4/docs/README.md",
         "total_mappings_documented": 1
       },
       "error": null,

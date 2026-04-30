@@ -1,0 +1,1369 @@
+{
+  "repository": {
+    "name": "POC_Repository",
+    "version": "186",
+    "codepage": "UTF-8",
+    "databasetype": "Oracle"
+  },
+  "mappings": {
+    "m_comprehensive_poc": {
+      "name": "m_comprehensive_poc",
+      "description": "Comprehensive POC mapping with all transformation types",
+      "isvalid": "YES",
+      "transformations": {
+        "SQ_Customer_Data": {
+          "name": "SQ_Customer_Data",
+          "type": "Source Qualifier",
+          "description": "Source Qualifier for customer data",
+          "reusable": "NO",
+          "fields": [],
+          "attributes": {
+            "Sql Query": "SELECT CUSTOMER_ID, FIRST_NAME, LAST_NAME, EMAIL, PHONE, REGISTRATION_DATE, ACCOUNT_BALANCE, STATUS, CITY, COUNTRY FROM CUSTOMER_DATA"
+          },
+          "sql_query": "SELECT CUSTOMER_ID, FIRST_NAME, LAST_NAME, EMAIL, PHONE, REGISTRATION_DATE, ACCOUNT_BALANCE, STATUS, CITY, COUNTRY FROM CUSTOMER_DATA",
+          "expression_logic": [],
+          "filter_condition": null,
+          "groups": []
+        },
+        "EXP_Customer_Processing": {
+          "name": "EXP_Customer_Processing",
+          "type": "Expression",
+          "description": "Process customer data with expressions",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "CUSTOMER_ID",
+              "datatype": "number",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": "Unique customer identifier"
+            },
+            {
+              "name": "FIRST_NAME",
+              "datatype": "varchar2",
+              "porttype": "INPUT",
+              "precision": "50",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": "Customer first name"
+            },
+            {
+              "name": "LAST_NAME",
+              "datatype": "varchar2",
+              "porttype": "INPUT",
+              "precision": "50",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": "Customer last name"
+            },
+            {
+              "name": "FULL_NAME",
+              "datatype": "varchar2",
+              "porttype": "OUTPUT",
+              "precision": "101",
+              "scale": "0",
+              "expression": "CONCAT(CONCAT(FIRST_NAME, ' '), LAST_NAME)",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": "Customer full name"
+            },
+            {
+              "name": "EMAIL",
+              "datatype": "varchar2",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "100",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": "Customer email address"
+            },
+            {
+              "name": "PHONE",
+              "datatype": "varchar2",
+              "porttype": "INPUT",
+              "precision": "20",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": "Customer phone number"
+            },
+            {
+              "name": "CLEAN_PHONE",
+              "datatype": "varchar2",
+              "porttype": "OUTPUT",
+              "precision": "20",
+              "scale": "0",
+              "expression": "IIF(ISNULL(PHONE), 'N/A', REGEX_REPLACE(PHONE, '[^0-9]', ''))",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": "Clean phone number"
+            },
+            {
+              "name": "REGISTRATION_DATE",
+              "datatype": "date",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "19",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": "Customer registration date"
+            },
+            {
+              "name": "ACCOUNT_BALANCE",
+              "datatype": "number",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "12",
+              "scale": "2",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": "Customer account balance"
+            },
+            {
+              "name": "STATUS",
+              "datatype": "varchar2",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": "Customer status"
+            },
+            {
+              "name": "CUSTOMER_SEGMENT",
+              "datatype": "varchar2",
+              "porttype": "OUTPUT",
+              "precision": "20",
+              "scale": "0",
+              "expression": "IIF(ACCOUNT_BALANCE > 50000, 'PREMIUM', IIF(ACCOUNT_BALANCE > 10000, 'GOLD', 'STANDARD'))",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": "Customer segment"
+            },
+            {
+              "name": "CITY",
+              "datatype": "varchar2",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "50",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": "Customer city"
+            },
+            {
+              "name": "COUNTRY",
+              "datatype": "varchar2",
+              "porttype": "INPUT/OUTPUT",
+              "precision": "50",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": "Customer country"
+            }
+          ],
+          "attributes": {
+            "Tracing Level": "Normal"
+          },
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "FULL_NAME",
+              "expression": "CONCAT(CONCAT(FIRST_NAME, ' '), LAST_NAME)",
+              "type": "GENERAL"
+            },
+            {
+              "field": "CLEAN_PHONE",
+              "expression": "IIF(ISNULL(PHONE), 'N/A', REGEX_REPLACE(PHONE, '[^0-9]', ''))",
+              "type": "GENERAL"
+            },
+            {
+              "field": "CUSTOMER_SEGMENT",
+              "expression": "IIF(ACCOUNT_BALANCE > 50000, 'PREMIUM', IIF(ACCOUNT_BALANCE > 10000, 'GOLD', 'STANDARD'))",
+              "type": "GENERAL"
+            }
+          ],
+          "filter_condition": null,
+          "groups": []
+        },
+        "FLT_Active_Customers": {
+          "name": "FLT_Active_Customers",
+          "type": "Filter",
+          "description": "Filter active customers only",
+          "reusable": "NO",
+          "fields": [],
+          "attributes": {
+            "Tracing Level": "Normal",
+            "Filter Condition": "STATUS = 'ACTIVE' AND ISNULL(CUSTOMER_ID) = 0"
+          },
+          "sql_query": null,
+          "expression_logic": [],
+          "filter_condition": "STATUS = 'ACTIVE' AND ISNULL(CUSTOMER_ID) = 0",
+          "groups": []
+        },
+        "AGG_Customer_Summary": {
+          "name": "AGG_Customer_Summary",
+          "type": "Aggregator",
+          "description": "Aggregate customer data by location",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "CITY",
+              "datatype": "varchar2",
+              "porttype": "GROUPBY",
+              "precision": "50",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": "Customer city"
+            },
+            {
+              "name": "COUNTRY",
+              "datatype": "varchar2",
+              "porttype": "GROUPBY",
+              "precision": "50",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": "Customer country"
+            },
+            {
+              "name": "TOTAL_BALANCE",
+              "datatype": "number",
+              "porttype": "OUTPUT",
+              "precision": "15",
+              "scale": "2",
+              "expression": "SUM(ACCOUNT_BALANCE)",
+              "expressiontype": "AGGREGATE",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": "Total balance"
+            },
+            {
+              "name": "CUSTOMER_COUNT",
+              "datatype": "number",
+              "porttype": "OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "COUNT(CUSTOMER_ID)",
+              "expressiontype": "AGGREGATE",
+              "defaultvalue": "ERROR('transformation error')",
+              "description": "Customer count"
+            }
+          ],
+          "attributes": {
+            "Tracing Level": "Normal",
+            "Sorted Input": "NO",
+            "Aggregator Cache Directory": "$PMCacheDir",
+            "Aggregator Cache Size": "2000000"
+          },
+          "sql_query": null,
+          "expression_logic": [
+            {
+              "field": "TOTAL_BALANCE",
+              "expression": "SUM(ACCOUNT_BALANCE)",
+              "type": "AGGREGATE"
+            },
+            {
+              "field": "CUSTOMER_COUNT",
+              "expression": "COUNT(CUSTOMER_ID)",
+              "type": "AGGREGATE"
+            }
+          ],
+          "filter_condition": null,
+          "groups": []
+        },
+        "LKP_Customer_Status": {
+          "name": "LKP_Customer_Status",
+          "type": "Lookup Procedure",
+          "description": "Lookup customer status details",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "CUSTOMER_ID",
+              "datatype": "number",
+              "porttype": "INPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": "Customer ID"
+            },
+            {
+              "name": "STATUS",
+              "datatype": "varchar2",
+              "porttype": "INPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": "Customer status"
+            },
+            {
+              "name": "LKP_CUSTOMER_ID",
+              "datatype": "number",
+              "porttype": "LOOKUP",
+              "precision": "10",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            },
+            {
+              "name": "LKP_STATUS_DESC",
+              "datatype": "varchar2",
+              "porttype": "LOOKUP",
+              "precision": "100",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "",
+              "defaultvalue": "",
+              "description": ""
+            }
+          ],
+          "attributes": {
+            "Tracing Level": "Normal",
+            "Lookup Sql Override": "",
+            "Lookup Cache Directory Name": "$PMCacheDir",
+            "Lookup Cache Size": "2000000",
+            "Lookup Condition": "CUSTOMER_ID = LKP_CUSTOMER_ID"
+          },
+          "sql_query": null,
+          "expression_logic": [],
+          "filter_condition": null,
+          "groups": []
+        },
+        "JNR_Customer_Orders": {
+          "name": "JNR_Customer_Orders",
+          "type": "Joiner",
+          "description": "Join customer with order data",
+          "reusable": "NO",
+          "fields": [],
+          "attributes": {
+            "Tracing Level": "Normal",
+            "Join Type": "Normal",
+            "Join Condition": "CUSTOMER_ID = ORDER_CUSTOMER_ID",
+            "Sorted Input": "NO",
+            "Master Sort Order": "",
+            "Detail Sort Order": "",
+            "Joiner Cache Directory": "$PMCacheDir",
+            "Joiner Cache Size": "2000000"
+          },
+          "sql_query": null,
+          "expression_logic": [],
+          "filter_condition": null,
+          "groups": []
+        },
+        "RTR_Customer_Segments": {
+          "name": "RTR_Customer_Segments",
+          "type": "Router",
+          "description": "Route customers by segment",
+          "reusable": "NO",
+          "fields": [],
+          "attributes": {
+            "Tracing Level": "Normal"
+          },
+          "sql_query": null,
+          "expression_logic": [],
+          "filter_condition": null,
+          "groups": [
+            {
+              "name": "PREMIUM",
+              "expression": "CUSTOMER_SEGMENT = 'PREMIUM'",
+              "type": "OUTPUT",
+              "order": "1"
+            },
+            {
+              "name": "STANDARD",
+              "expression": "CUSTOMER_SEGMENT = 'STANDARD'",
+              "type": "OUTPUT",
+              "order": "2"
+            },
+            {
+              "name": "DEFAULT",
+              "expression": "TRUE",
+              "type": "OUTPUT",
+              "order": "3"
+            }
+          ]
+        },
+        "SEQ_Customer_ID": {
+          "name": "SEQ_Customer_ID",
+          "type": "Sequence",
+          "description": "Generate surrogate keys",
+          "reusable": "NO",
+          "fields": [
+            {
+              "name": "SURROGATE_KEY",
+              "datatype": "number",
+              "porttype": "OUTPUT",
+              "precision": "10",
+              "scale": "0",
+              "expression": "",
+              "expressiontype": "GENERAL",
+              "defaultvalue": "",
+              "description": "Surrogate key"
+            }
+          ],
+          "attributes": {
+            "Tracing Level": "Normal",
+            "Start Value": "1",
+            "Increment By": "1",
+            "End Value": "999999999",
+            "Current Value": "1",
+            "Cycle": "NO",
+            "Reset": "NO"
+          },
+          "sql_query": null,
+          "expression_logic": [],
+          "filter_condition": null,
+          "groups": []
+        },
+        "UPDSTRAT_Customer_Update": {
+          "name": "UPDSTRAT_Customer_Update",
+          "type": "Update Strategy",
+          "description": "Define update strategy",
+          "reusable": "NO",
+          "fields": [],
+          "attributes": {
+            "Tracing Level": "Normal",
+            "Update Strategy Expression": "IIF(CUSTOMER_SEGMENT = 'PREMIUM', DD_UPDATE, DD_INSERT)"
+          },
+          "sql_query": null,
+          "expression_logic": [],
+          "filter_condition": null,
+          "groups": []
+        }
+      },
+      "instances": [
+        {
+          "name": "SQ_Customer_Data",
+          "type": "TRANSFORMATION",
+          "transformation_name": "SQ_Customer_Data",
+          "transformation_type": "Source Qualifier",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "EXP_Customer_Processing",
+          "type": "TRANSFORMATION",
+          "transformation_name": "EXP_Customer_Processing",
+          "transformation_type": "Expression",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "FLT_Active_Customers",
+          "type": "TRANSFORMATION",
+          "transformation_name": "FLT_Active_Customers",
+          "transformation_type": "Filter",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "AGG_Customer_Summary",
+          "type": "TRANSFORMATION",
+          "transformation_name": "AGG_Customer_Summary",
+          "transformation_type": "Aggregator",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "LKP_Customer_Status",
+          "type": "TRANSFORMATION",
+          "transformation_name": "LKP_Customer_Status",
+          "transformation_type": "Lookup Procedure",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "JNR_Customer_Orders",
+          "type": "TRANSFORMATION",
+          "transformation_name": "JNR_Customer_Orders",
+          "transformation_type": "Joiner",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "RTR_Customer_Segments",
+          "type": "TRANSFORMATION",
+          "transformation_name": "RTR_Customer_Segments",
+          "transformation_type": "Router",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "SEQ_Customer_ID",
+          "type": "TRANSFORMATION",
+          "transformation_name": "SEQ_Customer_ID",
+          "transformation_type": "Sequence",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "UPDSTRAT_Customer_Update",
+          "type": "TRANSFORMATION",
+          "transformation_name": "UPDSTRAT_Customer_Update",
+          "transformation_type": "Update Strategy",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "T_Customer_Output",
+          "type": "TRANSFORMATION",
+          "transformation_name": "T_Customer_Output",
+          "transformation_type": "Target Definition",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "T_Customer_Summary",
+          "type": "TRANSFORMATION",
+          "transformation_name": "T_Customer_Summary",
+          "transformation_type": "Target Definition",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "T_Customer_Premium",
+          "type": "TRANSFORMATION",
+          "transformation_name": "T_Customer_Premium",
+          "transformation_type": "Target Definition",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        },
+        {
+          "name": "T_Customer_Standard",
+          "type": "TRANSFORMATION",
+          "transformation_name": "T_Customer_Standard",
+          "transformation_type": "Target Definition",
+          "description": "",
+          "reusable": "NO",
+          "dbdname": "",
+          "associated_sources": []
+        }
+      ],
+      "connectors": [
+        {
+          "fromfield": "CUSTOMER_ID",
+          "frominstance": "SQ_Customer_Data",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "CUSTOMER_ID",
+          "toinstance": "EXP_Customer_Processing",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "FIRST_NAME",
+          "frominstance": "SQ_Customer_Data",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "FIRST_NAME",
+          "toinstance": "EXP_Customer_Processing",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "LAST_NAME",
+          "frominstance": "SQ_Customer_Data",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "LAST_NAME",
+          "toinstance": "EXP_Customer_Processing",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "EMAIL",
+          "frominstance": "SQ_Customer_Data",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "EMAIL",
+          "toinstance": "EXP_Customer_Processing",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "PHONE",
+          "frominstance": "SQ_Customer_Data",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "PHONE",
+          "toinstance": "EXP_Customer_Processing",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "REGISTRATION_DATE",
+          "frominstance": "SQ_Customer_Data",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "REGISTRATION_DATE",
+          "toinstance": "EXP_Customer_Processing",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "ACCOUNT_BALANCE",
+          "frominstance": "SQ_Customer_Data",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "ACCOUNT_BALANCE",
+          "toinstance": "EXP_Customer_Processing",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "STATUS",
+          "frominstance": "SQ_Customer_Data",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "STATUS",
+          "toinstance": "EXP_Customer_Processing",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "CITY",
+          "frominstance": "SQ_Customer_Data",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "CITY",
+          "toinstance": "EXP_Customer_Processing",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "COUNTRY",
+          "frominstance": "SQ_Customer_Data",
+          "frominstancetype": "Source Qualifier",
+          "tofield": "COUNTRY",
+          "toinstance": "EXP_Customer_Processing",
+          "toinstancetype": "Expression"
+        },
+        {
+          "fromfield": "CUSTOMER_ID",
+          "frominstance": "EXP_Customer_Processing",
+          "frominstancetype": "Expression",
+          "tofield": "CUSTOMER_ID",
+          "toinstance": "FLT_Active_Customers",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "FULL_NAME",
+          "frominstance": "EXP_Customer_Processing",
+          "frominstancetype": "Expression",
+          "tofield": "FULL_NAME",
+          "toinstance": "FLT_Active_Customers",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "EMAIL",
+          "frominstance": "EXP_Customer_Processing",
+          "frominstancetype": "Expression",
+          "tofield": "EMAIL",
+          "toinstance": "FLT_Active_Customers",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "CLEAN_PHONE",
+          "frominstance": "EXP_Customer_Processing",
+          "frominstancetype": "Expression",
+          "tofield": "CLEAN_PHONE",
+          "toinstance": "FLT_Active_Customers",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "REGISTRATION_DATE",
+          "frominstance": "EXP_Customer_Processing",
+          "frominstancetype": "Expression",
+          "tofield": "REGISTRATION_DATE",
+          "toinstance": "FLT_Active_Customers",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "ACCOUNT_BALANCE",
+          "frominstance": "EXP_Customer_Processing",
+          "frominstancetype": "Expression",
+          "tofield": "ACCOUNT_BALANCE",
+          "toinstance": "FLT_Active_Customers",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "STATUS",
+          "frominstance": "EXP_Customer_Processing",
+          "frominstancetype": "Expression",
+          "tofield": "STATUS",
+          "toinstance": "FLT_Active_Customers",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "CUSTOMER_SEGMENT",
+          "frominstance": "EXP_Customer_Processing",
+          "frominstancetype": "Expression",
+          "tofield": "CUSTOMER_SEGMENT",
+          "toinstance": "FLT_Active_Customers",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "CITY",
+          "frominstance": "EXP_Customer_Processing",
+          "frominstancetype": "Expression",
+          "tofield": "CITY",
+          "toinstance": "FLT_Active_Customers",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "COUNTRY",
+          "frominstance": "EXP_Customer_Processing",
+          "frominstancetype": "Expression",
+          "tofield": "COUNTRY",
+          "toinstance": "FLT_Active_Customers",
+          "toinstancetype": "Filter"
+        },
+        {
+          "fromfield": "CUSTOMER_ID",
+          "frominstance": "FLT_Active_Customers",
+          "frominstancetype": "Filter",
+          "tofield": "CUSTOMER_ID",
+          "toinstance": "AGG_Customer_Summary",
+          "toinstancetype": "Aggregator"
+        },
+        {
+          "fromfield": "FULL_NAME",
+          "frominstance": "FLT_Active_Customers",
+          "frominstancetype": "Filter",
+          "tofield": "FULL_NAME",
+          "toinstance": "AGG_Customer_Summary",
+          "toinstancetype": "Aggregator"
+        },
+        {
+          "fromfield": "ACCOUNT_BALANCE",
+          "frominstance": "FLT_Active_Customers",
+          "frominstancetype": "Filter",
+          "tofield": "ACCOUNT_BALANCE",
+          "toinstance": "AGG_Customer_Summary",
+          "toinstancetype": "Aggregator"
+        },
+        {
+          "fromfield": "CUSTOMER_SEGMENT",
+          "frominstance": "FLT_Active_Customers",
+          "frominstancetype": "Filter",
+          "tofield": "CUSTOMER_SEGMENT",
+          "toinstance": "AGG_Customer_Summary",
+          "toinstancetype": "Aggregator"
+        },
+        {
+          "fromfield": "CITY",
+          "frominstance": "FLT_Active_Customers",
+          "frominstancetype": "Filter",
+          "tofield": "CITY",
+          "toinstance": "AGG_Customer_Summary",
+          "toinstancetype": "Aggregator"
+        },
+        {
+          "fromfield": "COUNTRY",
+          "frominstance": "FLT_Active_Customers",
+          "frominstancetype": "Filter",
+          "tofield": "COUNTRY",
+          "toinstance": "AGG_Customer_Summary",
+          "toinstancetype": "Aggregator"
+        },
+        {
+          "fromfield": "CUSTOMER_ID",
+          "frominstance": "FLT_Active_Customers",
+          "frominstancetype": "Filter",
+          "tofield": "CUSTOMER_ID",
+          "toinstance": "LKP_Customer_Status",
+          "toinstancetype": "Lookup Procedure"
+        },
+        {
+          "fromfield": "STATUS",
+          "frominstance": "FLT_Active_Customers",
+          "frominstancetype": "Filter",
+          "tofield": "STATUS",
+          "toinstance": "LKP_Customer_Status",
+          "toinstancetype": "Lookup Procedure"
+        },
+        {
+          "fromfield": "CUSTOMER_ID",
+          "frominstance": "FLT_Active_Customers",
+          "frominstancetype": "Filter",
+          "tofield": "CUSTOMER_ID",
+          "toinstance": "JNR_Customer_Orders",
+          "toinstancetype": "Joiner"
+        },
+        {
+          "fromfield": "FULL_NAME",
+          "frominstance": "FLT_Active_Customers",
+          "frominstancetype": "Filter",
+          "tofield": "FULL_NAME",
+          "toinstance": "JNR_Customer_Orders",
+          "toinstancetype": "Joiner"
+        },
+        {
+          "fromfield": "CUSTOMER_ID",
+          "frominstance": "FLT_Active_Customers",
+          "frominstancetype": "Filter",
+          "tofield": "CUSTOMER_ID",
+          "toinstance": "RTR_Customer_Segments",
+          "toinstancetype": "Router"
+        },
+        {
+          "fromfield": "FULL_NAME",
+          "frominstance": "FLT_Active_Customers",
+          "frominstancetype": "Filter",
+          "tofield": "FULL_NAME",
+          "toinstance": "RTR_Customer_Segments",
+          "toinstancetype": "Router"
+        },
+        {
+          "fromfield": "ACCOUNT_BALANCE",
+          "frominstance": "FLT_Active_Customers",
+          "frominstancetype": "Filter",
+          "tofield": "ACCOUNT_BALANCE",
+          "toinstance": "RTR_Customer_Segments",
+          "toinstancetype": "Router"
+        },
+        {
+          "fromfield": "CUSTOMER_SEGMENT",
+          "frominstance": "FLT_Active_Customers",
+          "frominstancetype": "Filter",
+          "tofield": "CUSTOMER_SEGMENT",
+          "toinstance": "RTR_Customer_Segments",
+          "toinstancetype": "Router"
+        },
+        {
+          "fromfield": "CUSTOMER_ID",
+          "frominstance": "RTR_Customer_Segments",
+          "frominstancetype": "Router",
+          "tofield": "CUSTOMER_ID",
+          "toinstance": "SEQ_Customer_ID",
+          "toinstancetype": "Sequence"
+        },
+        {
+          "fromfield": "FULL_NAME",
+          "frominstance": "RTR_Customer_Segments",
+          "frominstancetype": "Router",
+          "tofield": "FULL_NAME",
+          "toinstance": "SEQ_Customer_ID",
+          "toinstancetype": "Sequence"
+        },
+        {
+          "fromfield": "ACCOUNT_BALANCE",
+          "frominstance": "RTR_Customer_Segments",
+          "frominstancetype": "Router",
+          "tofield": "ACCOUNT_BALANCE",
+          "toinstance": "SEQ_Customer_ID",
+          "toinstancetype": "Sequence"
+        },
+        {
+          "fromfield": "CUSTOMER_SEGMENT",
+          "frominstance": "RTR_Customer_Segments",
+          "frominstancetype": "Router",
+          "tofield": "CUSTOMER_SEGMENT",
+          "toinstance": "SEQ_Customer_ID",
+          "toinstancetype": "Sequence"
+        },
+        {
+          "fromfield": "CUSTOMER_ID",
+          "frominstance": "SEQ_Customer_ID",
+          "frominstancetype": "Sequence",
+          "tofield": "CUSTOMER_ID",
+          "toinstance": "UPDSTRAT_Customer_Update",
+          "toinstancetype": "Update Strategy"
+        },
+        {
+          "fromfield": "FULL_NAME",
+          "frominstance": "SEQ_Customer_ID",
+          "frominstancetype": "Sequence",
+          "tofield": "FULL_NAME",
+          "toinstance": "UPDSTRAT_Customer_Update",
+          "toinstancetype": "Update Strategy"
+        },
+        {
+          "fromfield": "ACCOUNT_BALANCE",
+          "frominstance": "SEQ_Customer_ID",
+          "frominstancetype": "Sequence",
+          "tofield": "ACCOUNT_BALANCE",
+          "toinstance": "UPDSTRAT_Customer_Update",
+          "toinstancetype": "Update Strategy"
+        },
+        {
+          "fromfield": "CUSTOMER_SEGMENT",
+          "frominstance": "SEQ_Customer_ID",
+          "frominstancetype": "Sequence",
+          "tofield": "CUSTOMER_SEGMENT",
+          "toinstance": "UPDSTRAT_Customer_Update",
+          "toinstancetype": "Update Strategy"
+        },
+        {
+          "fromfield": "SURROGATE_KEY",
+          "frominstance": "SEQ_Customer_ID",
+          "frominstancetype": "Sequence",
+          "tofield": "SURROGATE_KEY",
+          "toinstance": "UPDSTRAT_Customer_Update",
+          "toinstancetype": "Update Strategy"
+        },
+        {
+          "fromfield": "CUSTOMER_ID",
+          "frominstance": "UPDSTRAT_Customer_Update",
+          "frominstancetype": "Update Strategy",
+          "tofield": "CUSTOMER_ID",
+          "toinstance": "T_Customer_Output",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "FULL_NAME",
+          "frominstance": "UPDSTRAT_Customer_Update",
+          "frominstancetype": "Update Strategy",
+          "tofield": "FULL_NAME",
+          "toinstance": "T_Customer_Output",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "ACCOUNT_BALANCE",
+          "frominstance": "UPDSTRAT_Customer_Update",
+          "frominstancetype": "Update Strategy",
+          "tofield": "ACCOUNT_BALANCE",
+          "toinstance": "T_Customer_Output",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "CUSTOMER_SEGMENT",
+          "frominstance": "UPDSTRAT_Customer_Update",
+          "frominstancetype": "Update Strategy",
+          "tofield": "CUSTOMER_SEGMENT",
+          "toinstance": "T_Customer_Output",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "SURROGATE_KEY",
+          "frominstance": "UPDSTRAT_Customer_Update",
+          "frominstancetype": "Update Strategy",
+          "tofield": "SURROGATE_KEY",
+          "toinstance": "T_Customer_Output",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "CITY",
+          "frominstance": "AGG_Customer_Summary",
+          "frominstancetype": "Aggregator",
+          "tofield": "CITY",
+          "toinstance": "T_Customer_Summary",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "COUNTRY",
+          "frominstance": "AGG_Customer_Summary",
+          "frominstancetype": "Aggregator",
+          "tofield": "COUNTRY",
+          "toinstance": "T_Customer_Summary",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "TOTAL_BALANCE",
+          "frominstance": "AGG_Customer_Summary",
+          "frominstancetype": "Aggregator",
+          "tofield": "TOTAL_BALANCE",
+          "toinstance": "T_Customer_Summary",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "CUSTOMER_COUNT",
+          "frominstance": "AGG_Customer_Summary",
+          "frominstancetype": "Aggregator",
+          "tofield": "CUSTOMER_COUNT",
+          "toinstance": "T_Customer_Summary",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "CUSTOMER_ID",
+          "frominstance": "RTR_Customer_Segments",
+          "frominstancetype": "Router",
+          "tofield": "CUSTOMER_ID",
+          "toinstance": "T_Customer_Premium",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "FULL_NAME",
+          "frominstance": "RTR_Customer_Segments",
+          "frominstancetype": "Router",
+          "tofield": "FULL_NAME",
+          "toinstance": "RTR_Customer_Segments",
+          "toinstancetype": "Router"
+        },
+        {
+          "fromfield": "ACCOUNT_BALANCE",
+          "frominstance": "RTR_Customer_Segments",
+          "frominstancetype": "Router",
+          "tofield": "ACCOUNT_BALANCE",
+          "toinstance": "T_Customer_Premium",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "CUSTOMER_ID",
+          "frominstance": "RTR_Customer_Segments",
+          "frominstancetype": "Router",
+          "tofield": "CUSTOMER_ID",
+          "toinstance": "T_Customer_Standard",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "FULL_NAME",
+          "frominstance": "RTR_Customer_Segments",
+          "frominstancetype": "Router",
+          "tofield": "FULL_NAME",
+          "toinstance": "T_Customer_Standard",
+          "toinstancetype": "Target Definition"
+        },
+        {
+          "fromfield": "ACCOUNT_BALANCE",
+          "frominstance": "RTR_Customer_Segments",
+          "frominstancetype": "Router",
+          "tofield": "ACCOUNT_BALANCE",
+          "toinstance": "T_Customer_Standard",
+          "toinstancetype": "Target Definition"
+        }
+      ],
+      "targetloadorder": [],
+      "variables": {}
+    }
+  },
+  "sources": {
+    "CUSTOMER_DATA": {
+      "name": "CUSTOMER_DATA",
+      "businessname": "",
+      "databasetype": "Oracle",
+      "dbdname": "CUSTOMER_DB",
+      "description": "Customer data source",
+      "fields": [
+        {
+          "name": "CUSTOMER_ID",
+          "datatype": "number",
+          "fieldnumber": "1",
+          "length": "",
+          "precision": "10",
+          "scale": "0",
+          "keytype": "PRIMARY KEY",
+          "nullable": "NOTNULL",
+          "description": "Unique customer identifier"
+        },
+        {
+          "name": "FIRST_NAME",
+          "datatype": "varchar2",
+          "fieldnumber": "2",
+          "length": "",
+          "precision": "50",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer first name"
+        },
+        {
+          "name": "LAST_NAME",
+          "datatype": "varchar2",
+          "fieldnumber": "3",
+          "length": "",
+          "precision": "50",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer last name"
+        },
+        {
+          "name": "EMAIL",
+          "datatype": "varchar2",
+          "fieldnumber": "4",
+          "length": "",
+          "precision": "100",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer email address"
+        },
+        {
+          "name": "PHONE",
+          "datatype": "varchar2",
+          "fieldnumber": "5",
+          "length": "",
+          "precision": "20",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer phone number"
+        },
+        {
+          "name": "REGISTRATION_DATE",
+          "datatype": "date",
+          "fieldnumber": "6",
+          "length": "",
+          "precision": "19",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer registration date"
+        },
+        {
+          "name": "ACCOUNT_BALANCE",
+          "datatype": "number",
+          "fieldnumber": "7",
+          "length": "",
+          "precision": "12",
+          "scale": "2",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer account balance"
+        },
+        {
+          "name": "STATUS",
+          "datatype": "varchar2",
+          "fieldnumber": "8",
+          "length": "",
+          "precision": "10",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer status"
+        },
+        {
+          "name": "CITY",
+          "datatype": "varchar2",
+          "fieldnumber": "9",
+          "length": "",
+          "precision": "50",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer city"
+        },
+        {
+          "name": "COUNTRY",
+          "datatype": "varchar2",
+          "fieldnumber": "10",
+          "length": "",
+          "precision": "50",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer country"
+        }
+      ],
+      "attributes": {}
+    }
+  },
+  "targets": {
+    "T_Customer_Output": {
+      "name": "T_Customer_Output",
+      "businessname": "",
+      "databasetype": "Oracle",
+      "description": "Main customer output table",
+      "fields": [
+        {
+          "name": "CUSTOMER_ID",
+          "datatype": "number",
+          "fieldnumber": "1",
+          "precision": "10",
+          "scale": "0",
+          "keytype": "PRIMARY KEY",
+          "nullable": "NOTNULL",
+          "description": "Unique customer identifier"
+        },
+        {
+          "name": "FULL_NAME",
+          "datatype": "varchar2",
+          "fieldnumber": "2",
+          "precision": "101",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer full name"
+        },
+        {
+          "name": "ACCOUNT_BALANCE",
+          "datatype": "number",
+          "fieldnumber": "3",
+          "precision": "12",
+          "scale": "2",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer account balance"
+        },
+        {
+          "name": "CUSTOMER_SEGMENT",
+          "datatype": "varchar2",
+          "fieldnumber": "4",
+          "precision": "20",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer segment"
+        },
+        {
+          "name": "SURROGATE_KEY",
+          "datatype": "number",
+          "fieldnumber": "5",
+          "precision": "10",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Surrogate key"
+        }
+      ],
+      "attributes": {}
+    },
+    "T_Customer_Summary": {
+      "name": "T_Customer_Summary",
+      "businessname": "",
+      "databasetype": "Oracle",
+      "description": "Customer summary by location",
+      "fields": [
+        {
+          "name": "CITY",
+          "datatype": "varchar2",
+          "fieldnumber": "1",
+          "precision": "50",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "City"
+        },
+        {
+          "name": "COUNTRY",
+          "datatype": "varchar2",
+          "fieldnumber": "2",
+          "precision": "50",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Country"
+        },
+        {
+          "name": "TOTAL_BALANCE",
+          "datatype": "number",
+          "fieldnumber": "3",
+          "precision": "15",
+          "scale": "2",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Total balance"
+        },
+        {
+          "name": "CUSTOMER_COUNT",
+          "datatype": "number",
+          "fieldnumber": "4",
+          "precision": "10",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer count"
+        }
+      ],
+      "attributes": {}
+    },
+    "T_Customer_Premium": {
+      "name": "T_Customer_Premium",
+      "businessname": "",
+      "databasetype": "Oracle",
+      "description": "Premium customers",
+      "fields": [
+        {
+          "name": "CUSTOMER_ID",
+          "datatype": "number",
+          "fieldnumber": "1",
+          "precision": "10",
+          "scale": "0",
+          "keytype": "PRIMARY KEY",
+          "nullable": "NOTNULL",
+          "description": "Unique customer identifier"
+        },
+        {
+          "name": "FULL_NAME",
+          "datatype": "varchar2",
+          "fieldnumber": "2",
+          "precision": "101",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer full name"
+        },
+        {
+          "name": "ACCOUNT_BALANCE",
+          "datatype": "number",
+          "fieldnumber": "3",
+          "precision": "12",
+          "scale": "2",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer account balance"
+        }
+      ],
+      "attributes": {}
+    },
+    "T_Customer_Standard": {
+      "name": "T_Customer_Standard",
+      "businessname": "",
+      "databasetype": "Oracle",
+      "description": "Standard customers",
+      "fields": [
+        {
+          "name": "CUSTOMER_ID",
+          "datatype": "number",
+          "fieldnumber": "1",
+          "precision": "10",
+          "scale": "0",
+          "keytype": "PRIMARY KEY",
+          "nullable": "NOTNULL",
+          "description": "Unique customer identifier"
+        },
+        {
+          "name": "FULL_NAME",
+          "datatype": "varchar2",
+          "fieldnumber": "2",
+          "precision": "101",
+          "scale": "0",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer full name"
+        },
+        {
+          "name": "ACCOUNT_BALANCE",
+          "datatype": "number",
+          "fieldnumber": "3",
+          "precision": "12",
+          "scale": "2",
+          "keytype": "NOT A KEY",
+          "nullable": "NULL",
+          "description": "Customer account balance"
+        }
+      ],
+      "attributes": {}
+    }
+  },
+  "transformations": {},
+  "maplets": {}
+}

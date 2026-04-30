@@ -146,7 +146,24 @@ class KnowledgeGraphBuilder:
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         
         if format == "graphml":
-            nx.write_graphml(self.graph, output_path)
+            # Create a copy of the graph with serializable data
+            import copy
+            serializable_graph = copy.deepcopy(self.graph)
+            
+            # Convert complex objects to strings
+            for node in serializable_graph.nodes():
+                node_data = serializable_graph.nodes[node]
+                for key, value in node_data.items():
+                    if isinstance(value, (list, dict)):
+                        node_data[key] = str(value)
+            
+            for edge in serializable_graph.edges(data=True):
+                edge_data = edge[2]
+                for key, value in edge_data.items():
+                    if isinstance(value, (list, dict)):
+                        edge_data[key] = str(value)
+            
+            nx.write_graphml(serializable_graph, output_path)
         elif format == "gexf":
             nx.write_gexf(self.graph, output_path)
         elif format == "graphviz":
